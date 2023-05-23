@@ -31,6 +31,10 @@ public class UserControl {
     }
 
     public void login() {
+        if (username == null || password == null) {
+            return;
+        }
+
         // TODO: Check if login credentials are correct
         loggedIn = true;
         ui.getJMenuBar().getMenu(0).getMenuComponent(0).setVisible(false);

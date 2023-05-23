@@ -13,7 +13,8 @@ public class LoginDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         setTitle("Anmelden");
-        setIconImage(new ImageIcon("src/assets/business-contact.png").getImage());
+        setIconImage(new ImageIcon("src/assets/business-contact-male.png").getImage());
+        setResizable(false);
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

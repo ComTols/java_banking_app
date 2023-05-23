@@ -45,6 +45,8 @@ public class MainScreenMenu extends JMenuBar {
         logoutItem.setName("logout");
         logoutItem.setVisible(false);
         fileMenu.add(logoutItem);
+        JMenuItem newAccountItem = new JMenuItem("Neues Konto");
+        fileMenu.add(newAccountItem);
         JMenuItem openItem = new JMenuItem("Einstellungen");
         fileMenu.add(openItem);
         JMenuItem profileItem = new JMenuItem("Profileinstellungen");
