@@ -1,3 +1,9 @@
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class UserControl {
 
     public static UserControl control = new UserControl();
@@ -6,6 +12,10 @@ public class UserControl {
     private char[] password = null;
     private boolean loggedIn = false;
     public MainScreen ui = null;
+
+    public UserControl() {
+        loadData();
+    }
 
 
     public String getUsername() {
@@ -50,11 +60,32 @@ public class UserControl {
         ui.getJMenuBar().getMenu(0).getMenuComponent(1).setVisible(false);
     }
 
+    public void addFriend(String forename, String lastname) {
+        // TODO: Kontakt hinzufügen
+    }
+
+    public void removeFriend(String forename, String lastname) {
+        // TODO: Kontakt entfernen
+    }
+
     private void enableAdminMode() {
         ui.getJMenuBar().getMenu(3).setVisible(true);
     }
 
     private void disableAdminMode() {
         ui.getJMenuBar().getMenu(3).setVisible(false);
+    }
+
+    private void loadData() {
+        Path p = Paths.get("src/storage/userdata");
+        if(!Files.isRegularFile(p)) {
+            try {
+                Files.createFile(p);
+            } catch (IOException e) {
+                System.exit(100);
+            }
+        } else {
+            System.out.println("Existiert jawoll!");
+        }
     }
 }

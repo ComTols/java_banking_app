@@ -84,7 +84,6 @@ public class MainScreen extends JFrame {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 if (column == 3 && value != null) {
-                    System.out.println(value);
                     if((double)value < 0) {
                         component.setForeground(Color.RED); // Beträge in rot darstellen
                     } else {

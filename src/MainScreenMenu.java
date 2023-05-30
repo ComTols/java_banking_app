@@ -60,6 +60,12 @@ public class MainScreenMenu extends JMenuBar {
         JMenu contactMenu = new JMenu("Kontakte");
 
         JMenuItem contactsItem = new JMenuItem("Kontakte anzeigen");
+        contactsItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ShowContacts();
+            }
+        });
         JMenuItem pendingRequestsItem = new JMenuItem("Ausstehende Anfragen");
         JMenuItem addFriendsItem = new JMenuItem("Freunde einladen");
 

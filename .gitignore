@@ -2,3 +2,4 @@
 /out/
 .gitignore
 .idea
+/src/storage/userdata
