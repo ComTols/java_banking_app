@@ -5,9 +5,10 @@ public class TransferDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JComboBox comboBox1;
-    private JTextField textField1;
-    private JTextArea textArea1;
+    private JComboBox comboBoxReciver;
+    private JTextField textFieldTotal;
+    private JTextArea textAreaPurpose;
+    private JComboBox comboBoxAccount;
 
     public TransferDialog() {
         setContentPane(contentPane);
@@ -55,7 +56,51 @@ public class TransferDialog extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
+
+        if(textAreaPurpose.getText().isEmpty()) {
+            textAreaPurpose.setText("Überweisung");
+        }
+
+        if(textFieldTotal.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Der Betrag darf nicht leer sein!", "Betrag angeben", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        textFieldTotal.setText(textFieldTotal.getText().replace(",", "."));
+        float total = -1.0f;
+        try {
+            total = Float.parseFloat(textFieldTotal.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Der Betrag hat kein gültiges Format! Bitte geben Sie einen Zahlenwert mit maximal zwei Nachkommastellen ein.", "Betrag falsch", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        total = Math.round(total * 100f) / 100f;
+
+        if(total <= 0) {
+            JOptionPane.showMessageDialog(this, "Der Betrag muss positiv sein! Bitte geben Sie einen Zahlenwert mit maximal zwei Nachkommastellen ein, der größer als 0 ist.", "Betrag falsch", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String receiver = (comboBoxReciver.getSelectedItem().toString());
+        String account = (comboBoxAccount.getSelectedItem().toString());
+
+        int userDecision = JOptionPane.showConfirmDialog(this, "<html>Bestellung prüfen:<br><table>" +
+                "<tr><tb>Konto:</tb><tb>"+account+"</tb></tr>" +
+                "<tr><tb>Empfänger:</tb><tb>"+receiver+"</tb></tr>"+
+                "<tr><tb>Betrag:</tb><tb>"+total+"€</tb></tr>"+
+                "<tr><tb>Verwendungszweck:</tb><tb>"+textAreaPurpose.getText()+"</tb></tr>"+
+                "</table></html>");
+
+        if(userDecision != JOptionPane.OK_OPTION) return;
+
+        UserControl.control.transferMoney(
+                account,
+                receiver,
+                total,
+                textAreaPurpose.getText()
+            );
+
         dispose();
     }
 

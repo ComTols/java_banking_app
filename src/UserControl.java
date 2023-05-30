@@ -76,6 +76,10 @@ public class UserControl {
         // TODO: Anfrage ablehnen
     }
 
+    public void transferMoney(String account, String receiver, float total, String purpose) {
+        // TODO: Geld bewegen
+    }
+
     private void enableAdminMode() {
         ui.getJMenuBar().getMenu(3).setVisible(true);
     }
