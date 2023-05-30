@@ -14,6 +14,12 @@ public class MainScreenMenu extends JMenuBar {
     private JMenu createTransferMenu() {
         JMenu transferMenu = new JMenu("Transfer");
         JMenuItem transactionItem = new JMenuItem("Überweisen");
+        transactionItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new TransferDialog();
+            }
+        });
         transferMenu.add(transactionItem);
         JMenuItem requestItem = new JMenuItem("Geld anfordern");
         transferMenu.add(requestItem);
