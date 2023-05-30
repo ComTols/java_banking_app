@@ -67,6 +67,12 @@ public class MainScreenMenu extends JMenuBar {
             }
         });
         JMenuItem pendingRequestsItem = new JMenuItem("Ausstehende Anfragen");
+        pendingRequestsItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ShowRequests();
+            }
+        });
         JMenuItem addFriendsItem = new JMenuItem("Freunde einladen");
 
         contactMenu.add(contactsItem);

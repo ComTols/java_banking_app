@@ -1,23 +1,17 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.awt.event.*;
 
-public class
-ShowContacts extends JDialog {
+public class ShowRequests extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JTable table1;
-    private JScrollBar scrollBar1;
 
-    public ShowContacts() {
+    public ShowRequests() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setTitle("Kontakte anzeigen");
-        setIconImage(new ImageIcon("src/assets/contacts.png").getImage());
-
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -40,6 +34,7 @@ ShowContacts extends JDialog {
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+        // call onCancel() on ENTER
         contentPane.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
@@ -56,7 +51,7 @@ ShowContacts extends JDialog {
     }
 
     public static void main(String[] args) {
-        ShowContacts dialog = new ShowContacts();
+        ShowRequests dialog = new ShowRequests();
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
@@ -67,20 +62,21 @@ ShowContacts extends JDialog {
         DefaultTableModel model = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column==3; // Alle Zellen als nicht editierbar markieren
+                return column==3 || column == 4; // Alle Zellen als nicht editierbar markieren
             }
         };
         model.addColumn("Vorname");
         model.addColumn("Nachname");
         model.addColumn("Rolle");
-        model.addColumn("Hinzufügen");
+        model.addColumn("Annehmen");
+        model.addColumn("Ablehnen");
 
         // Hinzufügen von Beispieldaten
-        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", "Hinzufügen"});
-        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", "Hinzufügen"});
-        model.addRow(new Object[]{"Hans", "Beispiel", "Bänker", "Entfernen"});
-        model.addRow(new Object[]{"Anna", "Test", "Bänker", "Hinzufügen"});
-        model.addRow(new Object[]{"Peter", "Proband", "Kurde", "Entfernen"});
+        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", "Annehmen", "Ablehnen"});
+        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", "Annehmen", "Ablehnen"});
+        model.addRow(new Object[]{"Hans", "Beispiel", "Bänker", "Annehmen", "Ablehnen"});
+        model.addRow(new Object[]{"Anna", "Test", "Bänker", "Annehmen", "Ablehnen"});
+        model.addRow(new Object[]{"Peter", "Proband", "Kurde", "Annehmen", "Ablehnen"});
 
         // Erstellen der JTable mit dem TableModel
         table1 = new JTable(model);
@@ -91,13 +87,16 @@ ShowContacts extends JDialog {
         table1.getColumnModel().getColumn(3).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                if (table.getValueAt(row, 3).equals("Hinzufügen")) {
-                    UserControl.control.addFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
-                    JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt hinzugefügt.");
-                } else {
-                    UserControl.control.removeFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
-                    JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt entfernt.");
-                }
+                UserControl.control.acceptFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
+                JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt angenommen.");
+            }
+        });
+        table1.getColumnModel().getColumn(4).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
+        table1.getColumnModel().getColumn(4).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
+            @Override
+            public void onClick(ClientsTableRenderer clientsTableRenderer) {
+                UserControl.control.rejectFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
+                JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt abgelehnt.");
             }
         });
         table1.setPreferredScrollableViewportSize(table1.getPreferredSize());
@@ -105,5 +104,3 @@ ShowContacts extends JDialog {
         table1.setShowVerticalLines(false);
     }
 }
-
-

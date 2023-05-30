@@ -68,6 +68,14 @@ public class UserControl {
         // TODO: Kontakt entfernen
     }
 
+    public void acceptFriend(String forename, String lastname) {
+        // TODO: Anfrage annehmen
+    }
+
+    public void rejectFriend(String forename, String lastname) {
+        // TODO: Anfrage ablehnen
+    }
+
     private void enableAdminMode() {
         ui.getJMenuBar().getMenu(3).setVisible(true);
     }
