@@ -74,7 +74,12 @@ public class MainScreenMenu extends JMenuBar {
             }
         });
         JMenuItem addFriendsItem = new JMenuItem("Freunde einladen");
-
+        addFriendsItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new InviteContacts();
+            }
+        });
         contactMenu.add(contactsItem);
         contactMenu.add(pendingRequestsItem);
         contactMenu.add(addFriendsItem);

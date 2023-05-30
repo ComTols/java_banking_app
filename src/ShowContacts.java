@@ -1,23 +1,17 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.awt.event.*;
 
-public class
-ShowContacts extends JDialog {
+public class ShowContacts extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JTable table1;
-    private JScrollBar scrollBar1;
 
     public ShowContacts() {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setTitle("Kontakte anzeigen");
-        setIconImage(new ImageIcon("src/assets/contacts.png").getImage());
-
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -73,13 +67,13 @@ ShowContacts extends JDialog {
         model.addColumn("Vorname");
         model.addColumn("Nachname");
         model.addColumn("Rolle");
-        model.addColumn("Hinzufügen");
+        model.addColumn("Entfernen");
 
         // Hinzufügen von Beispieldaten
-        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", "Hinzufügen"});
-        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", "Hinzufügen"});
+        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", "Entfernen"});
+        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", "Entfernen"});
         model.addRow(new Object[]{"Hans", "Beispiel", "Bänker", "Entfernen"});
-        model.addRow(new Object[]{"Anna", "Test", "Bänker", "Hinzufügen"});
+        model.addRow(new Object[]{"Anna", "Test", "Bänker", "Entfernen"});
         model.addRow(new Object[]{"Peter", "Proband", "Kurde", "Entfernen"});
 
         // Erstellen der JTable mit dem TableModel
@@ -91,13 +85,8 @@ ShowContacts extends JDialog {
         table1.getColumnModel().getColumn(3).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                if (table.getValueAt(row, 3).equals("Hinzufügen")) {
-                    UserControl.control.addFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
-                    JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt hinzugefügt.");
-                } else {
-                    UserControl.control.removeFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
-                    JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt entfernt.");
-                }
+                UserControl.control.removeFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
+                JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt entfernt.");
             }
         });
         table1.setPreferredScrollableViewportSize(table1.getPreferredSize());
@@ -105,5 +94,3 @@ ShowContacts extends JDialog {
         table1.setShowVerticalLines(false);
     }
 }
-
-
