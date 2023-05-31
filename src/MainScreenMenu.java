@@ -22,6 +22,12 @@ public class MainScreenMenu extends JMenuBar {
         });
         transferMenu.add(transactionItem);
         JMenuItem requestItem = new JMenuItem("Geld anfordern");
+        requestItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new RequestMoneyDialog();
+            }
+        });
         transferMenu.add(requestItem);
         JMenuItem standingOrderItem = new JMenuItem("Dauerauftrag");
         transferMenu.add(standingOrderItem);
@@ -54,6 +60,12 @@ public class MainScreenMenu extends JMenuBar {
         JMenuItem newAccountItem = new JMenuItem("Neues Konto");
         fileMenu.add(newAccountItem);
         JMenuItem openItem = new JMenuItem("Einstellungen");
+        openItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(UserControl.control.ui, "Es wurde alles eingestellt.", "Einstellungen", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         fileMenu.add(openItem);
         JMenuItem profileItem = new JMenuItem("Profileinstellungen");
         fileMenu.add(profileItem);
