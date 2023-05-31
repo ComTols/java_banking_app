@@ -1,6 +1,7 @@
 package Data;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Database {
@@ -177,5 +178,27 @@ public class Database {
         }
 
         return list.toArray(new Person[0]);
+    }
+
+    public BankAccount[] getBankAccounts(Person p) {
+        ArrayList<BankAccount> list = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM contacts WHERE ((first_lastname = ? AND first_forename = ?) OR (secound_lastname = ? AND second_forename = ?)) AND pending = 0"
+            );
+            statement.setString(1, p.lastname);
+            statement.setString(2, p.forename);
+            statement.setString(3, p.lastname);
+            statement.setString(4, p.forename);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list.toArray(new BankAccount[0]);
     }
 }
