@@ -1,5 +1,7 @@
 package UI;
 
+import Data.Person;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -76,12 +78,15 @@ public class ShowRequests extends JDialog {
         model.addColumn("Annehmen");
         model.addColumn("Ablehnen");
 
-        // Hinzufügen von Beispieldaten
-        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", "Annehmen", "Ablehnen"});
-        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", "Annehmen", "Ablehnen"});
-        model.addRow(new Object[]{"Hans", "Beispiel", "Bänker", "Annehmen", "Ablehnen"});
-        model.addRow(new Object[]{"Anna", "Test", "Bänker", "Annehmen", "Ablehnen"});
-        model.addRow(new Object[]{"Peter", "Proband", "Kurde", "Annehmen", "Ablehnen"});
+        for (Person p : UserControl.control.getPendigRequests()) {
+            model.addRow(new Object[]{
+                    p.forename,
+                    p.lastname,
+                    p.role,
+                    "Annehmen",
+                    "Ablehnen"
+            });
+        }
 
         // Erstellen der JTable mit dem TableModel
         table1 = new JTable(model);

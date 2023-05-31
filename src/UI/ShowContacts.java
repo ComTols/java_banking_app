@@ -1,5 +1,7 @@
 package UI;
 
+import Data.Person;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -71,12 +73,15 @@ public class ShowContacts extends JDialog {
         model.addColumn("Rolle");
         model.addColumn("Entfernen");
 
-        // Hinzufügen von Beispieldaten
-        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", "Entfernen"});
-        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", "Entfernen"});
-        model.addRow(new Object[]{"Hans", "Beispiel", "Bänker", "Entfernen"});
-        model.addRow(new Object[]{"Anna", "Test", "Bänker", "Entfernen"});
-        model.addRow(new Object[]{"Peter", "Proband", "Kurde", "Entfernen"});
+        for (Person p : UserControl.control.getContacts()) {
+            model.addRow(new Object[]{
+                    p.forename,
+                    p.lastname,
+                    p.role,
+                    "Entfernen"
+            });
+
+        }
 
         // Erstellen der JTable mit dem TableModel
         table1 = new JTable(model);

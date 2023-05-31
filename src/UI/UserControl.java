@@ -1,5 +1,6 @@
 package UI;
 
+import Data.Database;
 import Data.Person;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ public class UserControl {
     private char[] password = null;
     private boolean loggedIn = false;
     public MainScreen ui = null;
+    private Database database;
 
     public UserControl() {
         loadData();
@@ -31,14 +33,15 @@ public class UserControl {
         this.user = new Person(forename,lastname);
     }
 
-    public void login(String forename, String lastname, char[] password) {
+    public void login(String forename, String lastname, char[] password) throws Exception {
         if (forename == null || lastname == null || password == null) throw new IllegalArgumentException();
         if (forename.isEmpty() || lastname.isEmpty() || password.length == 0) throw new IllegalArgumentException();
 
-        this.password = password;
-        this.user = new Person(forename, lastname);
+        this.user = database.checkPerson(forename, lastname, password);
+        if (user == null) {
+            throw new Exception("Anmeldung fehlgeschlagen.");
+        }
 
-        // TODO: Check if login credentials are correct
         loggedIn = true;
         ui.getJMenuBar().getMenu(0).getMenuComponent(0).setVisible(false);
         ui.getJMenuBar().getMenu(0).getMenuComponent(1).setVisible(true);
@@ -73,6 +76,18 @@ public class UserControl {
         // TODO: Geld bewegen
     }
 
+    public Person[] getAvailableFriends() {
+        return database.getAvailableFriends(user);
+    }
+
+    public Person[] getPendigRequests() {
+        return database.getPendigRequests(user);
+    }
+
+    public Person[] getContacts() {
+        return database.getContacts(user);
+    }
+
     private void enableAdminMode() {
         ui.getJMenuBar().getMenu(3).setVisible(true);
     }
@@ -82,15 +97,7 @@ public class UserControl {
     }
 
     private void loadData() {
-        Path p = Paths.get("src/storage/userdata");
-        if(!Files.isRegularFile(p)) {
-            try {
-                Files.createFile(p);
-            } catch (IOException e) {
-                System.exit(100);
-            }
-        } else {
-            System.out.println("Existiert jawoll!");
-        }
+        database = new Database();
+        database.connect();
     }
 }

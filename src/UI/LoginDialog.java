@@ -60,6 +60,8 @@ public class LoginDialog extends JDialog {
             UserControl.control.login(txtForename.getText(), txtLastname.getText(), password.getPassword());
             dispose();
         } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Die Anmeldedaten sind falsch! Bitte erneut versuchen", "Anmeldung fehlgeschlagen", JOptionPane.ERROR_MESSAGE);
         }
     }
 

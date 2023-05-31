@@ -1,5 +1,7 @@
 package UI;
 
+import Data.Person;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
@@ -76,12 +78,14 @@ InviteContacts extends JDialog {
         model.addColumn("Rolle");
         model.addColumn("Hinzufügen");
 
-        // Hinzufügen von Beispieldaten
-        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", "Hinzufügen"});
-        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", "Hinzufügen"});
-        model.addRow(new Object[]{"Hans", "Beispiel", "Bänker", "Entfernen"});
-        model.addRow(new Object[]{"Anna", "Test", "Bänker", "Hinzufügen"});
-        model.addRow(new Object[]{"Peter", "Proband", "Kurde", "Entfernen"});
+        for (Person p : UserControl.control.getAvailableFriends()) {
+            model.addRow(new Object[]{
+                    p.forename,
+                    p.lastname,
+                    p.role,
+                    "Hinzufügen"
+                });
+        }
 
         // Erstellen der JTable mit dem TableModel
         table1 = new JTable(model);
