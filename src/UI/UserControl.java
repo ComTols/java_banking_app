@@ -1,4 +1,7 @@
-import java.io.File;
+package UI;
+
+import Data.Person;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,7 +11,7 @@ public class UserControl {
 
     public static UserControl control = new UserControl();
 
-    private String username = null;
+    private Person user = null;
     private char[] password = null;
     private boolean loggedIn = false;
     public MainScreen ui = null;
@@ -17,33 +20,23 @@ public class UserControl {
         loadData();
     }
 
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) throws IllegalArgumentException {
-        if (username == null || username.isEmpty()) {
+    public void setUser(String forename, String lastname) throws IllegalArgumentException {
+        if (forename == null || forename.isEmpty()) {
             throw new IllegalArgumentException();
         }
-        this.username = username;
-    }
-
-    public char[] getPassword() {
-        return password;
-    }
-
-    public void setPassword(char[] password) throws IllegalArgumentException {
-        if (password == null || password.length == 0) {
+        if (lastname == null || lastname.isEmpty()) {
             throw new IllegalArgumentException();
         }
+        // TODO: Datenbank abfragen
+        this.user = new Person(forename,lastname);
+    }
+
+    public void login(String forename, String lastname, char[] password) {
+        if (forename == null || lastname == null || password == null) throw new IllegalArgumentException();
+        if (forename.isEmpty() || lastname.isEmpty() || password.length == 0) throw new IllegalArgumentException();
+
         this.password = password;
-    }
-
-    public void login() {
-        if (username == null || password == null) {
-            return;
-        }
+        this.user = new Person(forename, lastname);
 
         // TODO: Check if login credentials are correct
         loggedIn = true;
@@ -53,7 +46,7 @@ public class UserControl {
 
     public void logout() {
         loggedIn = false;
-        username = null;
+        user = null;
         password = null;
 
         ui.getJMenuBar().getMenu(0).getMenuComponent(0).setVisible(true);

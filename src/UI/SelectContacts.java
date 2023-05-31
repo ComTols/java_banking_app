@@ -1,22 +1,21 @@
+package UI;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.event.*;
 
-public class
-InviteContacts extends JDialog {
+public class SelectContacts extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
+    private JButton buttonCancel;
     private JTable table1;
-    private JScrollBar scrollBar1;
+    private ISelectReceiver receiver;
 
-    public InviteContacts() {
+    public SelectContacts(ISelectReceiver receiver) {
+        this.receiver = receiver;
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setTitle("Kontakte anzeigen");
-        setIconImage(new ImageIcon("src/assets/contacts.png").getImage());
-
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -24,21 +23,28 @@ InviteContacts extends JDialog {
             }
         });
 
+        buttonCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onCancel();
+            }
+        });
+
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                onOK();
+                onCancel();
             }
         });
 
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onOK();
+                onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
+        // call onCancel() on ENTER
         contentPane.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
@@ -50,15 +56,14 @@ InviteContacts extends JDialog {
     }
 
     private void onOK() {
-        // add your code here
+        // TODO: Auswahl als Personen Klasse übergeben
+        receiver.receiveSelectedContacts(new String[] {});
         dispose();
     }
 
-    public static void main(String[] args) {
-        InviteContacts dialog = new InviteContacts();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
+    private void onCancel() {
+        // add your code here if necessary
+        dispose();
     }
 
     private void createUIComponents() {
@@ -72,37 +77,32 @@ InviteContacts extends JDialog {
         model.addColumn("Vorname");
         model.addColumn("Nachname");
         model.addColumn("Rolle");
-        model.addColumn("Hinzufügen");
+        model.addColumn("Auswählen");
 
         // Hinzufügen von Beispieldaten
-        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", "Hinzufügen"});
-        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", "Hinzufügen"});
-        model.addRow(new Object[]{"Hans", "Beispiel", "Bänker", "Entfernen"});
-        model.addRow(new Object[]{"Anna", "Test", "Bänker", "Hinzufügen"});
-        model.addRow(new Object[]{"Peter", "Proband", "Kurde", "Entfernen"});
+        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", false});
+        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", false});
+        model.addRow(new Object[]{"Hans", "Beispiel", "Bänker", false});
+        model.addRow(new Object[]{"Anna", "Test", "Bänker", false});
+        model.addRow(new Object[]{"Peter", "Proband", "Kurde", false});
 
         // Erstellen der JTable mit dem TableModel
-        table1 = new JTable(model);
+        table1 = new JTable(model) {
+            @Override
+            public Class getColumnClass(int column) {
+                switch (column) {
+                    case 3:
+                        return Boolean.class;
+                    default:
+                        return String.class;
+                }
+            }
+        };
         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table1.setRowHeight(30);
 
-        table1.getColumnModel().getColumn(3).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
-        table1.getColumnModel().getColumn(3).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
-            @Override
-            public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                if (table.getValueAt(row, 3).equals("Hinzufügen")) {
-                    UserControl.control.addFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
-                    JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt hinzugefügt.");
-                } else {
-                    UserControl.control.removeFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
-                    JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt entfernt.");
-                }
-            }
-        });
         table1.setPreferredScrollableViewportSize(table1.getPreferredSize());
         table1.setShowHorizontalLines(true);
         table1.setShowVerticalLines(false);
     }
 }
-
-

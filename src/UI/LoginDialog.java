@@ -1,3 +1,5 @@
+package UI;
+
 import javax.swing.*;
 import java.awt.event.*;
 
@@ -5,8 +7,9 @@ public class LoginDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JPasswordField passwordPassword;
-    private JTextField textUsername;
+    private JPasswordField password;
+    private JTextField txtForename;
+    private JTextField txtLastname;
 
     public LoginDialog() {
         setContentPane(contentPane);
@@ -54,9 +57,7 @@ public class LoginDialog extends JDialog {
 
     private void onOK() {
         try {
-            UserControl.control.setPassword(passwordPassword.getPassword());
-            UserControl.control.setUsername(textUsername.getText());
-            UserControl.control.login();
+            UserControl.control.login(txtForename.getText(), txtLastname.getText(), password.getPassword());
             dispose();
         } catch (IllegalArgumentException e) {
         }
