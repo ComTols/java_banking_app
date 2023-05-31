@@ -1,8 +1,12 @@
 package UI;
 
+import Data.Person;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class SelectContacts extends JDialog {
     private JPanel contentPane;
@@ -16,6 +20,9 @@ public class SelectContacts extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        setIconImage(new ImageIcon("src/assets/contacts.png").getImage());
+        setTitle("Kontakte auswählen");
+
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -52,12 +59,32 @@ public class SelectContacts extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         pack();
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
         setVisible(true);
     }
 
     private void onOK() {
-        // TODO: Auswahl als Personen Klasse übergeben
-        receiver.receiveSelectedContacts(new String[] {});
+        ArrayList<Person> persons = new ArrayList<>();
+        for (int i = 0; i < table1.getModel().getRowCount(); i++) {
+            boolean sel = (boolean) table1.getModel().getValueAt(i, 3);
+            if (sel) {
+                String forename = "";
+                try {
+                    forename = table1.getModel().getValueAt(i, 0).toString();
+                } catch (NullPointerException e) {}
+                String lastname = "";
+                try {
+                    lastname = table1.getModel().getValueAt(i, 1).toString();
+                } catch (NullPointerException e) {}
+                String role = "";
+                try {
+                    role = table1.getModel().getValueAt(i, 2).toString();
+                } catch (NullPointerException e) {}
+                persons.add(new Person(forename, lastname, role));
+            }
+        }
+
+        receiver.receiveSelectedContacts(persons.toArray(new Person[0]));
         dispose();
     }
 
@@ -79,12 +106,14 @@ public class SelectContacts extends JDialog {
         model.addColumn("Rolle");
         model.addColumn("Auswählen");
 
-        // Hinzufügen von Beispieldaten
-        model.addRow(new Object[]{"Max", "Mustermann", "Kunde", false});
-        model.addRow(new Object[]{"Erika", "Musterfrau", "Kunde", false});
-        model.addRow(new Object[]{"Hans", "Beispiel", "Bänker", false});
-        model.addRow(new Object[]{"Anna", "Test", "Bänker", false});
-        model.addRow(new Object[]{"Peter", "Proband", "Kurde", false});
+        for (Person p : UserControl.control.getContacts()) {
+            model.addRow(new Object[]{
+                    p.forename,
+                    p.lastname,
+                    p.role,
+                    false
+            });
+        }
 
         // Erstellen der JTable mit dem TableModel
         table1 = new JTable(model) {

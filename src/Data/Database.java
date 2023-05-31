@@ -95,10 +95,10 @@ public class Database {
                 for (int i = 0; i < list.size(); i++) {
                     Person l = list.get(i);
                     if (
-                            Objects.equals(l.forename, result.getString("first_forename")) ||
-                            Objects.equals(l.forename, result.getString("second_forename")) ||
-                            Objects.equals(l.lastname, result.getString("first_lastname")) ||
-                            Objects.equals(l.lastname, result.getString("second_lastname"))
+                            l.forename.equals(result.getString("first_forename")) ||
+                            l.forename.equals(result.getString("second_forename")) ||
+                            l.lastname.equals(result.getString("first_lastname")) ||
+                            l.lastname.equals(result.getString("secound_lastname"))
                     ) {
                         list.remove(i);
                         i--;
@@ -115,7 +115,7 @@ public class Database {
         ArrayList<Person> list = new ArrayList<Person>();
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM contacts WHERE (first_lastname = ? AND first_forename = ?) OR (secound_lastname = ? AND second_forename = ?) AND pending = 1"
+                    "SELECT * FROM contacts WHERE ((first_lastname = ? AND first_forename = ?) OR (secound_lastname = ? AND second_forename = ?)) AND pending = 1"
             );
             statement.setString(1, p.lastname);
             statement.setString(2, p.forename);
@@ -149,7 +149,7 @@ public class Database {
         ArrayList<Person> list = new ArrayList<Person>();
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM contacts WHERE (first_lastname = ? AND first_forename = ?) OR (secound_lastname = ? AND second_forename = ?) AND pending = 0"
+                    "SELECT * FROM contacts WHERE ((first_lastname = ? AND first_forename = ?) OR (secound_lastname = ? AND second_forename = ?)) AND pending = 0"
             );
             statement.setString(1, p.lastname);
             statement.setString(2, p.forename);

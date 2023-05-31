@@ -60,6 +60,12 @@ public class MainScreenMenu extends JMenuBar {
         logoutItem.setVisible(false);
         fileMenu.add(logoutItem);
         JMenuItem newAccountItem = new JMenuItem("Neues Konto");
+        newAccountItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new NewAccountDialog();
+            }
+        });
         fileMenu.add(newAccountItem);
         JMenuItem openItem = new JMenuItem("Einstellungen");
         openItem.addActionListener(new ActionListener() {

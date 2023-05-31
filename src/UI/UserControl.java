@@ -72,19 +72,31 @@ public class UserControl {
         // TODO: Anfrage ablehnen
     }
 
-    public void transferMoney(String account, String receiver, float total, String purpose) {
+    public void transferMoney(String account, Person[] receivers, float total, String purpose) {
         // TODO: Geld bewegen
     }
 
     public Person[] getAvailableFriends() {
+        if (user == null) {
+            new LoginDialog();
+            return null;
+        }
         return database.getAvailableFriends(user);
     }
 
     public Person[] getPendigRequests() {
+        if (user == null) {
+            new LoginDialog();
+            return null;
+        }
         return database.getPendigRequests(user);
     }
 
     public Person[] getContacts() {
+        if (user == null) {
+            new LoginDialog();
+            return null;
+        }
         return database.getContacts(user);
     }
 
@@ -99,5 +111,8 @@ public class UserControl {
     private void loadData() {
         database = new Database();
         database.connect();
+    }
+
+    public void createNewBankAccount(int accountType, int parseInt, String text) {
     }
 }

@@ -1,6 +1,9 @@
 package UI;
 
+import Data.Person;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 
 public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
@@ -23,10 +26,22 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
         setTitle("Geld anfordern");
         setIconImage(new ImageIcon("src/assets/handout.png").getImage());
 
+
         btnAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectContacts();
+            }
+        });
+
+        btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultListModel model = (DefaultListModel) listFrom.getModel();
+                int selectedIndex = listFrom.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    model.remove(selectedIndex);
+                }
             }
         });
 
@@ -64,6 +79,7 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         pack();
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
         setVisible(true);
     }
 
@@ -81,6 +97,11 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
             JOptionPane.showMessageDialog(this, "Bitte geben Sie einen positiven Betrag mit maximal zwei Nachkommastellen an.", "Betrag zu klein", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        if(listFrom.getModel().getSize() <= 0) {
+            JOptionPane.showMessageDialog(this, "Bitte wählen Sie mindestens einen Kontakt aus!", "Kontakt auswählen", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         int choice = JOptionPane.showConfirmDialog(this, "Möchten Sie " + total + "€ anfordern?");
 
         if (choice == JOptionPane.OK_OPTION) {
@@ -102,8 +123,12 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
     }
 
     @Override
-    public void receiveSelectedContacts(String[] contacts) {
-        // TODO: Setzten
+    public void receiveSelectedContacts(Person[] contacts) {
+        DefaultListModel model = (DefaultListModel) listFrom.getModel();
+        model.clear();
+        for(Person p : contacts) {
+            model.addElement(p);
+        }
     }
 
     private void selectContacts() {

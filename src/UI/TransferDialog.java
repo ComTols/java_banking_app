@@ -1,16 +1,22 @@
 package UI;
 
-import javax.swing.*;
-import java.awt.event.*;
+import Data.Person;
 
-public class TransferDialog extends JDialog {
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+public class TransferDialog extends JDialog implements ISelectReceiver {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JComboBox comboBoxReciver;
     private JTextField textFieldTotal;
     private JTextArea textAreaPurpose;
     private JComboBox comboBoxAccount;
+    private JList listReceiver;
+    private JButton btnAdd;
+    private JButton btnDelete;
 
     public TransferDialog() {
         setContentPane(contentPane);
@@ -18,6 +24,25 @@ public class TransferDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
         setTitle("Überweisung");
         setIconImage(new ImageIcon("src/assets/payment.png").getImage());
+
+
+        btnAdd.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectContacts();
+            }
+        });
+
+        btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultListModel model = (DefaultListModel) listReceiver.getModel();
+                int selectedIndex = listReceiver.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    model.remove(selectedIndex);
+                }
+            }
+        });
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -54,6 +79,7 @@ public class TransferDialog extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         pack();
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
         setVisible(true);
     }
 
@@ -84,10 +110,28 @@ public class TransferDialog extends JDialog {
             return;
         }
 
-        String receiver = (comboBoxReciver.getSelectedItem().toString());
+        if(listReceiver.getModel().getSize() <= 0) {
+            JOptionPane.showMessageDialog(this, "Bitte wählen Sie mindestens einen Empfänger aus!", "Empfänger auswählen", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        ArrayList<Person> receivers = new ArrayList<>();
+        StringBuilder receiver = new StringBuilder();
+
+        for (int i = 0; i < listReceiver.getModel().getSize(); i ++) {
+            Person p = (Person) listReceiver.getModel().getElementAt(i);
+            receivers.add(p);
+            receiver.append("\"");
+            receiver.append(p.toString());
+            receiver.append("\"; ");
+        }
+        receiver.deleteCharAt(receiver.length() - 1);
+        receiver.deleteCharAt(receiver.length() - 1);
+
+
         String account = (comboBoxAccount.getSelectedItem().toString());
 
-        int userDecision = JOptionPane.showConfirmDialog(this, "<html>Bestellung prüfen:<br><table>" +
+        int userDecision = JOptionPane.showConfirmDialog(this, "<html>Überweisung prüfen:<br><table>" +
                 "<tr><tb>Konto:</tb><tb>"+account+"</tb></tr>" +
                 "<tr><tb>Empfänger:</tb><tb>"+receiver+"</tb></tr>"+
                 "<tr><tb>Betrag:</tb><tb>"+total+"€</tb></tr>"+
@@ -98,7 +142,7 @@ public class TransferDialog extends JDialog {
 
         UserControl.control.transferMoney(
                 account,
-                receiver,
+                receivers.toArray(new Person[0]),
                 total,
                 textAreaPurpose.getText()
             );
@@ -116,5 +160,18 @@ public class TransferDialog extends JDialog {
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
+    }
+
+    private void selectContacts() {
+        new SelectContacts(this);
+    }
+
+    @Override
+    public void receiveSelectedContacts(Person[] contacts) {
+        DefaultListModel model = (DefaultListModel) listReceiver.getModel();
+        model.clear();
+        for(Person p : contacts) {
+            model.addElement(p);
+        }
     }
 }

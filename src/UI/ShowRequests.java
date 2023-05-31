@@ -5,6 +5,7 @@ import Data.Person;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 import java.awt.event.*;
 
 public class ShowRequests extends JDialog {
@@ -18,6 +19,7 @@ public class ShowRequests extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
         setIconImage(new ImageIcon("src/assets/businessman.png").getImage());
         setTitle("Ausstehende Anfragen");
+
 
 
         buttonOK.addActionListener(new ActionListener() {
@@ -49,6 +51,7 @@ public class ShowRequests extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         pack();
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
         setVisible(true);
     }
 
