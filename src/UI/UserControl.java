@@ -24,6 +24,10 @@ public class UserControl {
         this.activeAccount = activeAccount;
     }
 
+    public BankAccount getActiveAccount() {
+        return activeAccount;
+    }
+
     private BankAccount activeAccount;
 
     public UserControl() {

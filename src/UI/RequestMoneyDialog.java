@@ -1,5 +1,6 @@
 package UI;
 
+import Data.BankAccount;
 import Data.Person;
 
 import javax.swing.*;
@@ -44,6 +45,10 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
                 }
             }
         });
+
+        for (BankAccount b : UserControl.control.getBankAccounts()) {
+            comboBoxAccount.addItem(b);
+        }
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

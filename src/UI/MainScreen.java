@@ -35,6 +35,19 @@ public class MainScreen extends JFrame {
                 refreshTransactions();
             }
         });
+
+        btnAccountinfo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showBankAccountInfos();
+            }
+        });
+    }
+
+    private void showBankAccountInfos() {
+        BankAccount b = UserControl.control.getActiveAccount();
+        JOptionPane.showMessageDialog(this,
+                "<html>Dieses Konto:<br>Name: " + b + "<br>Typ: "+ b.getClass() +"<br>Maximaler Dispokredit: "+b.getOverdraftFacility()+"€</html>", "Kontoinformationen", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void refreshBankAccounts() {
