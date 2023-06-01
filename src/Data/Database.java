@@ -225,24 +225,38 @@ public class Database {
                             "             (t.from_account = ? OR t.to_account = ?);"
             );
             statement.setString(1, b.name);
-            statement.setString(1, b.name);
+            statement.setString(2, b.name);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
+                float total = 0.0f;
                 BankAccount from = new BankAccount();
                 from.name = result.getString("from_account");
                 BankAccount to = new BankAccount();
                 to.name = result.getString("to_account");
                 if (from.name.equals(b.name)) {
                     from = b;
+                    total = result.getFloat("total") * -1;
                     //TODO: Wenn to ist anderes Konto, dann neue Abfrage über to.name in accounts um user zu finden
+                    PreparedStatement statement2 = connection.prepareStatement(
+                            "SELECT * FROM accounts WHERE name = ?;"
+                    );
+                    statement2.setString(1, to.name);
+                    ResultSet result2 = statement.executeQuery();
+                    while (result2.next()) {
+                        to.owner = new Person(
+                                result2.getString("forename"),
+                                result2.getString("lastname")
+                        );
+                    }
                 } else {
+                    total = result.getFloat("total");
                     to = b;
                     from.owner = new Person(
                             result.getString("forename"),
                             result.getString("lastname")
                     );
                 }
-                list.add(new Transaction(from, to, result.getFloat("total"), result.getString("purpose"), result.getDate("time")));
+                list.add(new Transaction(from, to, total, result.getString("purpose"), result.getDate("time")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

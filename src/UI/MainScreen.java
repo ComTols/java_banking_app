@@ -19,6 +19,7 @@ public class MainScreen extends JFrame {
     private JTable table1;
     private JScrollPane scrollPane;
     private JButton btnAccountinfo;
+    private JLabel labelTotal;
 
     public MainScreen() {
         setContentPane(panelMain);
@@ -38,32 +39,48 @@ public class MainScreen extends JFrame {
 
     public void refreshBankAccounts() {
         try {
+            boolean first = true;
             ((DefaultComboBoxModel)comboBoxAccount.getModel()).removeAllElements();
             for (BankAccount b : UserControl.control.getBankAccounts()) {
+                if (first) {
+                    UserControl.control.setActiveAccount(b);
+                    first = false;
+                }
                 comboBoxAccount.addItem(b);
             }
         } catch (NullPointerException e) {}
+        refreshTransactions();
     }
 
     public void refreshTransactions() {
+
+        float totalAccount = 0.0f;
+
         int rowCount = table1.getModel().getRowCount();
         for (int i = rowCount - 1; i >= 0; i--) {
             ((DefaultTableModel)table1.getModel()).removeRow(i);
         }
-        for (Transaction t : UserControl.control.getTransactions()) {
-            String sender = "";
-            if (UserControl.control.isActiveBankAccount(t.from)) {
-                sender = t.to.owner.toString();
-            } else {
-                sender = t.from.owner.toString();
+        try {
+            for (Transaction t : UserControl.control.getTransactions()) {
+                String sender = "";
+                if (UserControl.control.isActiveBankAccount(t.from)) {
+                    sender = t.to.owner.toString();
+                } else {
+                    sender = t.from.owner.toString();
+                }
+                ((DefaultTableModel)table1.getModel()).addRow(new Object[]{
+                        t.timestamp,
+                        sender,
+                        t.purpose,
+                        t.total
+                });
+                totalAccount += t.total;
             }
-            ((DefaultTableModel)table1.getModel()).addRow(new Object[]{
-                    t.timestamp,
-                    sender,
-                    t.purpose,
-                    t.total
-            });
-        }
+        } catch (NullPointerException e) {}
+
+        DecimalFormat decimalFormat = new DecimalFormat("#,##0.00 €");
+
+        labelTotal.setText("Kontostand: " + decimalFormat.format(totalAccount));
     }
 
     private void createAndShowGui() {
@@ -117,13 +134,13 @@ public class MainScreen extends JFrame {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 if (column == 3 && value != null) {
-                    if((double)value < 0) {
+                    if((float)value < 0) {
                         component.setForeground(Color.RED); // Beträge in rot darstellen
                     } else {
                         component.setForeground(table.getForeground()); // Standardfarbe für andere Zellen beibehalten
                     }
                     setHorizontalAlignment(SwingConstants.RIGHT); // Rechtsbündig ausrichten
-                    if (value instanceof Double) {
+                    if (value instanceof Float) {
                         value = decimalFormat.format(value); // Beträge im Format anzeigen
                     }
                     setText(value.toString());

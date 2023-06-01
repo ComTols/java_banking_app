@@ -62,6 +62,10 @@ public class UserControl {
         user = null;
         password = null;
 
+        activeAccount = null;
+        ui.refreshTransactions();
+        ui.refreshBankAccounts();
+
         ui.getJMenuBar().getMenu(0).getMenuComponent(0).setVisible(true);
         ui.getJMenuBar().getMenu(0).getMenuComponent(1).setVisible(false);
     }
