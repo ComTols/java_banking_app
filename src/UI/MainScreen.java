@@ -1,9 +1,14 @@
 package UI;
 
+import Data.BankAccount;
+import Data.Transaction;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.DecimalFormat;
@@ -19,12 +24,46 @@ public class MainScreen extends JFrame {
         setContentPane(panelMain);
         UserControl.control.ui = this;
         createAndShowGui();
+
+        refreshBankAccounts();
+
         comboBoxAccount.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                System.out.println(comboBoxAccount.getSelectedIndex());
+                UserControl.control.setActiveAccount((BankAccount) comboBoxAccount.getSelectedItem());
+                refreshTransactions();
             }
         });
+    }
+
+    public void refreshBankAccounts() {
+        try {
+            ((DefaultComboBoxModel)comboBoxAccount.getModel()).removeAllElements();
+            for (BankAccount b : UserControl.control.getBankAccounts()) {
+                comboBoxAccount.addItem(b);
+            }
+        } catch (NullPointerException e) {}
+    }
+
+    public void refreshTransactions() {
+        int rowCount = table1.getModel().getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            ((DefaultTableModel)table1.getModel()).removeRow(i);
+        }
+        for (Transaction t : UserControl.control.getTransactions()) {
+            String sender = "";
+            if (UserControl.control.isActiveBankAccount(t.from)) {
+                sender = t.to.owner.toString();
+            } else {
+                sender = t.from.owner.toString();
+            }
+            ((DefaultTableModel)table1.getModel()).addRow(new Object[]{
+                    t.timestamp,
+                    sender,
+                    t.purpose,
+                    t.total
+            });
+        }
     }
 
     private void createAndShowGui() {
@@ -51,13 +90,6 @@ public class MainScreen extends JFrame {
         model.addColumn("Absender");
         model.addColumn("Verwendungszweck");
         model.addColumn("Betrag");
-
-        // Hinzufügen von Beispieldaten
-        model.addRow(new Object[]{"2023-05-01", "Max Mustermann", "Miete", 100.0});
-        model.addRow(new Object[]{"2023-05-02", "Erika Musterfrau", "Einkauf", 200.0});
-        model.addRow(new Object[]{"2023-05-03", "Hans Beispiel", "Gehalt", -150.0});
-        model.addRow(new Object[]{"2023-05-04", "Anna Test", "Rechnung", 300.0});
-        model.addRow(new Object[]{"2023-05-05", "Peter Proband", "Kredit", 250.0});
 
         model.setRowCount(100);
 

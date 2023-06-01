@@ -152,11 +152,7 @@
               </grid>
             </constraints>
             <properties>
-              <model>
-                <item value="Person 1"/>
-                <item value="Person 2"/>
-                <item value="Person 3"/>
-              </model>
+              <model/>
             </properties>
           </component>
           <component id="cdcdf" class="javax.swing.JLabel">

@@ -185,20 +185,69 @@ public class Database {
 
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM contacts WHERE ((first_lastname = ? AND first_forename = ?) OR (secound_lastname = ? AND second_forename = ?)) AND pending = 0"
+                    "SELECT * FROM accounts WHERE forename = ? AND lastname = ?"
             );
-            statement.setString(1, p.lastname);
-            statement.setString(2, p.forename);
-            statement.setString(3, p.lastname);
-            statement.setString(4, p.forename);
+            statement.setString(1, p.forename);
+            statement.setString(2, p.lastname);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-
+                switch (result.getString("type")) {
+                    case "normal":
+                        BankAccount b = new BankAccount(p,result.getString("name"));
+                        b.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                        list.add(b);
+                        break;
+                    case "fixed_deposit":
+                        break;
+                    case "saving":
+                        break;
+                    case "shared":
+                        break;
+                    case "credit":
+                        break;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return list.toArray(new BankAccount[0]);
+    }
+
+    public Transaction[] getTransactions(BankAccount b) {
+        ArrayList<Transaction> list = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM transactions as t, accounts as a" +
+                            "         WHERE" +
+                            "             a.name = t.from_account AND" +
+                            "             (t.from_account = ? OR t.to_account = ?);"
+            );
+            statement.setString(1, b.name);
+            statement.setString(1, b.name);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                BankAccount from = new BankAccount();
+                from.name = result.getString("from_account");
+                BankAccount to = new BankAccount();
+                to.name = result.getString("to_account");
+                if (from.name.equals(b.name)) {
+                    from = b;
+                    //TODO: Wenn to ist anderes Konto, dann neue Abfrage über to.name in accounts um user zu finden
+                } else {
+                    to = b;
+                    from.owner = new Person(
+                            result.getString("forename"),
+                            result.getString("lastname")
+                    );
+                }
+                list.add(new Transaction(from, to, result.getFloat("total"), result.getString("purpose"), result.getDate("time")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list.toArray(new Transaction[0]);
     }
 }

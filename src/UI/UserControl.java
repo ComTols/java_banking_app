@@ -1,7 +1,9 @@
 package UI;
 
+import Data.BankAccount;
 import Data.Database;
 import Data.Person;
+import Data.Transaction;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,6 +19,12 @@ public class UserControl {
     private boolean loggedIn = false;
     public MainScreen ui = null;
     private Database database;
+
+    public void setActiveAccount(BankAccount activeAccount) {
+        this.activeAccount = activeAccount;
+    }
+
+    private BankAccount activeAccount;
 
     public UserControl() {
         loadData();
@@ -45,6 +53,8 @@ public class UserControl {
         loggedIn = true;
         ui.getJMenuBar().getMenu(0).getMenuComponent(0).setVisible(false);
         ui.getJMenuBar().getMenu(0).getMenuComponent(1).setVisible(true);
+
+        ui.refreshBankAccounts();
     }
 
     public void logout() {
@@ -98,6 +108,25 @@ public class UserControl {
             return null;
         }
         return database.getContacts(user);
+    }
+
+    public BankAccount[] getBankAccounts() {
+        if (user == null) {
+            new LoginDialog();
+            return null;
+        }
+        return database.getBankAccounts(user);
+    }
+
+    public Transaction[] getTransactions() {
+        if (activeAccount == null) {
+            return null;
+        }
+        return database.getTransactions(activeAccount);
+    }
+
+    public boolean isActiveBankAccount(BankAccount b) {
+        return b.name.equals(activeAccount.name);
     }
 
     private void enableAdminMode() {
