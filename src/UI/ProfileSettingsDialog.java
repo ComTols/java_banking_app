@@ -70,9 +70,4 @@ public class ProfileSettingsDialog extends JDialog {
         // add your code here if necessary
         dispose();
     }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
-
-    }
 }

@@ -8,8 +8,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
-    // TODO: Zu Personen Klasse ändern
-    public String[] persons = new String[] {};
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;

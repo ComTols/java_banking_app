@@ -3,7 +3,9 @@ import CustomExceptions.DuplicateKeyException;
 import UI.UserControl;
 
 import java.sql.*;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Database {
 
@@ -189,10 +191,28 @@ public class Database {
                         list.add(b);
                         break;
                     case "fixed_deposit":
+                        FixedDepositAccount f = new FixedDepositAccount();
+                        f.owner = p;
+                        f.name = result.getString("name");
+                        f.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                        f.accessDate = result.getDate("accessDate");
+                        list.add(f);
                         break;
                     case "saving":
+                        SavingAccount s = new SavingAccount();
+                        s.owner = p;
+                        s.name = result.getString("name");
+                        s.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                        s.reference = new BankAccount();
+                        s.reference.name = result.getString("reference");
+                        list.add(s);
                         break;
                     case "shared":
+                        SharedAccount sh = new SharedAccount();
+                        sh.owner = p;
+                        sh.name = result.getString("name");
+                        sh.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                        sh.secondOwner = new Person(result.getString("secound_forename"), result.getString("secound_lastname"));
                         break;
                     case "credit":
                         CreditAccount c = new CreditAccount();

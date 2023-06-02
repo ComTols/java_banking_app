@@ -149,7 +149,7 @@ public class NewAccountDialog extends JDialog {
         try {
             UserControl.control.createNewBankAccount(accountType, dispo, textFieldName.getText());
         } catch (DuplicateKeyException e) {
-            JOptionPane.showMessageDialog(this, "Der Kontoname ist bereits version! Bitte wählen Sie einen anderen.", "Name bereits vergeben", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Der Kontoname ist bereits vergeben! Bitte wählen Sie einen anderen.", "Name bereits vergeben", JOptionPane.ERROR_MESSAGE);
             return;
         }
         dispose();

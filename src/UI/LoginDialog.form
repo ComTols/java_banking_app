@@ -82,7 +82,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value="Maximilian"/>
+              <text value=""/>
             </properties>
           </component>
           <component id="53473" class="javax.swing.JLabel">
@@ -118,7 +118,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value="Schüller"/>
+              <text value=""/>
             </properties>
           </component>
         </children>

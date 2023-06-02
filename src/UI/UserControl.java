@@ -192,7 +192,7 @@ public class UserControl {
                 c.name = text;
                 c.setOverdraftFacility(dispo);
                 c.referenceAccount = new BankAccount();
-                c.referenceAccount.name = JOptionPane.showInputDialog(ui, "Bitte geben Sie den Namen des Referenzkontos an.", "Referenzkonto", JOptionPane.INFORMATION_MESSAGE);
+                c.referenceAccount.name = JOptionPane.showInputDialog(ui, "Bitte geben Sie den Namen des Referenzkontos an.", "Referenzkonto", JOptionPane.QUESTION_MESSAGE);
                 b = c;
                 break;
             case 3:
@@ -200,7 +200,14 @@ public class UserControl {
                 s.owner = user;
                 s.name = text;
                 s.setOverdraftFacility(dispo);
-                s.reference = null;
+
+                JComboBox availableReferences = new JComboBox();
+                for (BankAccount r : UserControl.control.getBankAccounts()) {
+                    availableReferences.addItem(r);
+                }
+
+                JOptionPane.showMessageDialog(ui, availableReferences, "Referenzkonto", JOptionPane.QUESTION_MESSAGE);
+                s.reference = (BankAccount) availableReferences.getSelectedItem();
                 b= s;
                 break;
             case 4:
@@ -208,7 +215,14 @@ public class UserControl {
                 sh.name = text;
                 sh.owner = user;
                 sh.setOverdraftFacility(dispo);
-                sh.secondOwner = null;
+
+                JComboBox availableOwner = new JComboBox();
+                for (Person r : UserControl.control.getContacts()) {
+                    availableOwner.addItem(r);
+                }
+
+                JOptionPane.showMessageDialog(ui, availableOwner, "Referenzkonto", JOptionPane.QUESTION_MESSAGE);
+                sh.secondOwner = (Person) availableOwner.getSelectedItem();
                 b = sh;
                 break;
         }
