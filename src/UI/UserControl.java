@@ -4,12 +4,6 @@ import CustomExceptions.DuplicateKeyException;
 import Data.*;
 
 import javax.swing.*;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 
 public class UserControl {
 
@@ -78,19 +72,35 @@ public class UserControl {
     }
 
     public void addFriend(String forename, String lastname) {
-        // TODO: Kontakt hinzufügen
+        if(user == null) {
+            new LoginDialog();
+            return;
+        }
+        database.addPendingFriendship(user, new Person(forename, lastname));
     }
 
-    public void removeFriend(String forename, String lastname) {
-        // TODO: Kontakt entfernen
+    public void removeFriend(String f, String l) {
+        if(user == null) {
+            new LoginDialog();
+            return;
+        }
+        database.deleteFriendship(user, new Person(f, l));
     }
 
-    public void acceptFriend(String forename, String lastname) {
-        // TODO: Anfrage annehmen
+    public void acceptFriend(String f, String l) {
+        if(user == null) {
+            new LoginDialog();
+            return;
+        }
+        database.acceptPendingFriendship(user, new Person(f, l));
     }
 
-    public void rejectFriend(String forename, String lastname) {
-        // TODO: Anfrage ablehnen
+    public void rejectFriend(String f, String l) {
+        if(user == null) {
+            new LoginDialog();
+            return;
+        }
+        database.deleteFriendship(user, new Person(f, l));
     }
 
     public void transferMoney(String account, Person[] receivers, float total, String purpose) {
@@ -110,7 +120,7 @@ public class UserControl {
             new LoginDialog();
             return null;
         }
-        return database.getPendigRequests(user);
+        return database.getPendingRequests(user);
     }
 
     public Person[] getContacts() {

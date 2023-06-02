@@ -2,11 +2,8 @@ package Data;
 import CustomExceptions.DuplicateKeyException;
 import UI.UserControl;
 
-import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 public class Database {
 
@@ -118,38 +115,40 @@ public class Database {
         return list.toArray(new Person[0]);
     }
 
-    public Person[] getPendigRequests(Person p) {
+    public Person[] getPendingRequests(Person p) {
         ArrayList<Person> list = new ArrayList<Person>();
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM contacts WHERE ((first_lastname = ? AND first_forename = ?) OR (secound_lastname = ? AND second_forename = ?)) AND pending = 1"
+                    "SELECT * FROM contacts WHERE secound_lastname = ? AND second_forename = ? AND pending = 1"
             );
             statement.setString(1, p.lastname);
             statement.setString(2, p.forename);
-            statement.setString(3, p.lastname);
-            statement.setString(4, p.forename);
             ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                String forename = "";
-                if(p.forename.equals(result.getString("first_forename"))) {
-                    forename = result.getString("second_forename");
-                } else {
-                    forename = result.getString("first_forename");
-                }
-
-                String lastname = "";
-                if(p.lastname.equals(result.getString("first_lastname"))) {
-                    lastname = result.getString("secound_lastname");
-                } else {
-                    lastname = result.getString("first_lastname");
-                }
-                list.add(new Person(forename, lastname));
-            }
+            handleContactsResponse(p, list, result);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return list.toArray(new Person[0]);
+    }
+
+    private void handleContactsResponse(Person p, ArrayList<Person> list, ResultSet result) throws SQLException {
+        while (result.next()) {
+            String forename = "";
+            if(p.forename.equals(result.getString("first_forename"))) {
+                forename = result.getString("second_forename");
+            } else {
+                forename = result.getString("first_forename");
+            }
+
+            String lastname = "";
+            if(p.lastname.equals(result.getString("first_lastname"))) {
+                lastname = result.getString("secound_lastname");
+            } else {
+                lastname = result.getString("first_lastname");
+            }
+            list.add(new Person(forename, lastname));
+        }
     }
 
     public Person[] getContacts(Person p) {
@@ -163,22 +162,7 @@ public class Database {
             statement.setString(3, p.lastname);
             statement.setString(4, p.forename);
             ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                String forename = "";
-                if(p.forename.equals(result.getString("first_forename"))) {
-                    forename = result.getString("second_forename");
-                } else {
-                    forename = result.getString("first_forename");
-                }
-
-                String lastname = "";
-                if(p.lastname.equals(result.getString("first_lastname"))) {
-                    lastname = result.getString("secound_lastname");
-                } else {
-                    lastname = result.getString("first_lastname");
-                }
-                list.add(new Person(forename, lastname));
-            }
+            handleContactsResponse(p, list, result);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -343,5 +327,77 @@ public class Database {
             e.printStackTrace();
         }
         UserControl.control.reloadUser();
+    }
+
+    public void deleteFriendship(Person me, Person other) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM contacts WHERE " +
+                            "((first_forename = ? AND first_lastname = ?) OR" +
+                            "(second_forename = ? AND secound_lastname = ?)) AND" +
+                            "((first_forename = ? AND first_lastname = ?) OR" +
+                            "(second_forename = ? AND secound_lastname = ?))"
+            );
+            statement.setString(1, me.forename);
+            statement.setString(2, me.lastname);
+            statement.setString(3, me.forename);
+            statement.setString(4, me.lastname);
+            statement.setString(5, other.forename);
+            statement.setString(6, other.lastname);
+            statement.setString(7, other.forename);
+            statement.setString(8, other.lastname);
+            int rowsInserted = statement.executeUpdate();
+            if(rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addPendingFriendship(Person me, Person other) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO java_banking.contacts (first_forename, first_lastname, second_forename, secound_lastname)" +
+                            "VALUES (?,?,?,?)"
+            );
+            statement.setString(1, me.forename);
+            statement.setString(2, me.lastname);
+            statement.setString(3, other.forename);
+            statement.setString(4, other.lastname);
+            int rowsInserted = statement.executeUpdate();
+            if(rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void acceptPendingFriendship(Person me, Person other) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE contacts " +
+                            "SET pending = false WHERE " +
+                            "((first_forename = ? AND first_lastname = ?) OR" +
+                            "(second_forename = ? AND secound_lastname = ?)) AND" +
+                            "((first_forename = ? AND first_lastname = ?) OR" +
+                            "(second_forename = ? AND secound_lastname = ?))"
+            );
+            statement.setString(1, me.forename);
+            statement.setString(2, me.lastname);
+            statement.setString(3, me.forename);
+            statement.setString(4, me.lastname);
+            statement.setString(5, other.forename);
+            statement.setString(6, other.lastname);
+            statement.setString(7, other.forename);
+            statement.setString(8, other.lastname);
+            int rowsInserted = statement.executeUpdate();
+            if(rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

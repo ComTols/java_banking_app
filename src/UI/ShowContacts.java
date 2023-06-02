@@ -84,7 +84,6 @@ public class ShowContacts extends JDialog {
                     p.role,
                     "Entfernen"
             });
-
         }
 
         // Erstellen der JTable mit dem TableModel
@@ -96,8 +95,22 @@ public class ShowContacts extends JDialog {
         table1.getColumnModel().getColumn(3).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                UserControl.control.removeFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
-                JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt entfernt.");
+                String f = table.getValueAt(row, 0).toString();
+                String l = table.getValueAt(row, 1).toString();
+                UserControl.control.removeFriend(f,l);
+                int rowCount = table1.getModel().getRowCount();
+                for (int i = rowCount - 1; i >= 0; i--) {
+                    ((DefaultTableModel)table1.getModel()).removeRow(i);
+                }
+                JOptionPane.showMessageDialog(button, f + " " + l + " wurde als Kontakt entfernt.");
+                for (Person p : UserControl.control.getContacts()) {
+                    ((DefaultTableModel)table1.getModel()).addRow(new Object[]{
+                            p.forename,
+                            p.lastname,
+                            p.role,
+                            "Entfernen"
+                    });
+                }
             }
         });
         table1.setPreferredScrollableViewportSize(table1.getPreferredSize());

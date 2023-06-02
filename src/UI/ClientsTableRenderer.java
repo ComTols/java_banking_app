@@ -51,7 +51,11 @@ public abstract class ClientsTableRenderer extends DefaultCellEditor {
     }
 
     protected void fireEditingStopped() {
-        super.fireEditingStopped();
+        try {
+            super.fireEditingStopped();
+        } catch (Exception e) {
+
+        }
     }
 
     public abstract void onClick(ClientsTableRenderer clientsTableRenderer);

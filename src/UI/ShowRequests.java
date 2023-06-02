@@ -100,16 +100,46 @@ public class ShowRequests extends JDialog {
         table1.getColumnModel().getColumn(3).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                UserControl.control.acceptFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
-                JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt angenommen.");
+                String f = table.getValueAt(row, 0).toString();
+                String l = table.getValueAt(row, 1).toString();
+                UserControl.control.acceptFriend(f, l);
+                int rowCount = table1.getModel().getRowCount();
+                for (int i = rowCount - 1; i >= 0; i--) {
+                    ((DefaultTableModel)table1.getModel()).removeRow(i);
+                }
+                JOptionPane.showMessageDialog(button, f + " " + l + " wurde als Kontakt angenommen.");
+                for (Person p : UserControl.control.getPendigRequests()) {
+                    ((DefaultTableModel)table1.getModel()).addRow(new Object[]{
+                            p.forename,
+                            p.lastname,
+                            p.role,
+                            "Annehmen",
+                            "Ablehnen"
+                    });
+                }
             }
         });
         table1.getColumnModel().getColumn(4).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
         table1.getColumnModel().getColumn(4).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                UserControl.control.rejectFriend((String) table.getValueAt(row, 0), (String) table.getValueAt(row, 1));
-                JOptionPane.showMessageDialog(button, table.getValueAt(row, 0) + " " + table.getValueAt(row, 1) + " wurde als Kontakt abgelehnt.");
+                String f = table.getValueAt(row, 0).toString();
+                String l = table.getValueAt(row, 1).toString();
+                UserControl.control.rejectFriend(f, l);
+                int rowCount = table1.getModel().getRowCount();
+                for (int i = rowCount - 1; i >= 0; i--) {
+                    ((DefaultTableModel)table1.getModel()).removeRow(i);
+                }
+                JOptionPane.showMessageDialog(button, f + " " + l + " wurde als Kontakt abgelehnt.");
+                for (Person p : UserControl.control.getPendigRequests()) {
+                    ((DefaultTableModel)table1.getModel()).addRow(new Object[]{
+                            p.forename,
+                            p.lastname,
+                            p.role,
+                            "Annehmen",
+                            "Ablehnen"
+                    });
+                }
             }
         });
         table1.setPreferredScrollableViewportSize(table1.getPreferredSize());
