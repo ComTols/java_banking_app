@@ -14,8 +14,10 @@ public class SelectContacts extends JDialog {
     private JButton buttonCancel;
     private JTable table1;
     private ISelectReceiver receiver;
+    private boolean selfIncluded;
 
-    public SelectContacts(ISelectReceiver receiver) {
+    public SelectContacts(ISelectReceiver receiver, boolean selfIncluded) {
+        this.selfIncluded = selfIncluded;
         this.receiver = receiver;
         setContentPane(contentPane);
         setModal(true);
@@ -111,6 +113,15 @@ public class SelectContacts extends JDialog {
                     p.forename,
                     p.lastname,
                     p.role,
+                    false
+            });
+        }
+
+        if (selfIncluded) {
+            model.addRow(new Object[]{
+                    UserControl.control.getUser().forename,
+                    UserControl.control.getUser().lastname,
+                    UserControl.control.getUser().role,
                     false
             });
         }

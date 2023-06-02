@@ -168,7 +168,7 @@ public class TransferDialog extends JDialog implements ISelectReceiver {
     }
 
     private void selectContacts() {
-        new SelectContacts(this);
+        new SelectContacts(this, true);
     }
 
     @Override

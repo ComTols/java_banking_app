@@ -137,6 +137,6 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
     }
 
     private void selectContacts() {
-        new SelectContacts(this);
+        new SelectContacts(this, false);
     }
 }

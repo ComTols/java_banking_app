@@ -15,6 +15,10 @@ public class UserControl {
 
     public static UserControl control = new UserControl();
 
+    public Person getUser() {
+        return user;
+    }
+
     private Person user = null;
     private char[] password = null;
     private boolean loggedIn = false;
@@ -33,17 +37,6 @@ public class UserControl {
 
     public UserControl() {
         loadData();
-    }
-
-    public void setUser(String forename, String lastname) throws IllegalArgumentException {
-        if (forename == null || forename.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        if (lastname == null || lastname.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        // TODO: Datenbank abfragen
-        this.user = new Person(forename,lastname);
     }
 
     public void login(String forename, String lastname, char[] password) throws Exception {
