@@ -103,8 +103,10 @@ public class UserControl {
         database.deleteFriendship(user, new Person(f, l));
     }
 
-    public void transferMoney(String account, Person[] receivers, float total, String purpose) {
-        // TODO: Geld bewegen
+    public void transferMoney(BankAccount account, Person[] receivers, float total, String purpose) {
+        for (Person r : receivers) {
+            database.moneyTransaction(account, r, total, purpose);
+        }
     }
 
     public Person[] getAvailableFriends() {

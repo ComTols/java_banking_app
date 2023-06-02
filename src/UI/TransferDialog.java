@@ -134,7 +134,7 @@ public class TransferDialog extends JDialog implements ISelectReceiver {
         receiver.deleteCharAt(receiver.length() - 1);
 
 
-        String account = (comboBoxAccount.getSelectedItem().toString());
+        BankAccount account = (BankAccount) comboBoxAccount.getSelectedItem();
 
         int userDecision = JOptionPane.showConfirmDialog(this, "<html>Überweisung prüfen:<br><table>" +
                 "<tr><tb>Konto:</tb><tb>"+account+"</tb></tr>" +

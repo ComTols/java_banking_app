@@ -149,7 +149,20 @@ public class Database {
             } else {
                 lastname = result.getString("first_lastname");
             }
-            list.add(new Person(forename, lastname));
+
+            Person person = new Person(forename, lastname);
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM user WHERE forename = ? AND lastname = ?"
+            );
+            statement.setString(1, forename);
+            statement.setString(2, lastname);
+            ResultSet result2 = statement.executeQuery();
+            while (result2.next()) {
+                person.mainAccountName = result2.getString("main_account");
+                person.role = result2.getString("role");
+            }
+
+            list.add(person);
         }
     }
 
@@ -431,6 +444,26 @@ public class Database {
             statement.setString(1, b.owner.forename);
             statement.setString(2, b.owner.lastname);
             statement.setString(3, b.name);
+            int rowsInserted = statement.executeUpdate();
+            if(rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void moneyTransaction(BankAccount f, Person t, float total, String purpose) {
+        System.out.println(t.mainAccountName);
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO transactions (from_account, to_account, total, purpose) " +
+                            "VALUES (?,?,?,?)"
+            );
+            statement.setString(1, f.name);
+            statement.setString(2, t.mainAccountName);
+            statement.setFloat(3, total);
+            statement.setString(4, purpose);
             int rowsInserted = statement.executeUpdate();
             if(rowsInserted != 1) {
                 System.out.println(rowsInserted);

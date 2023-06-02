@@ -1,6 +1,7 @@
 package UI;
 
 import Data.BankAccount;
+import Data.Person;
 import Data.Transaction;
 
 import javax.swing.*;
@@ -62,7 +63,14 @@ public class MainScreen extends JFrame {
             return;
         }
         if (total > 0) {
-            // TODO: tranfer money to main account
+            UserControl.control.transferMoney(
+                    (BankAccount)comboBoxAccount.getSelectedItem(),
+                    new Person[]{
+                            UserControl.control.getUser()
+                    },
+                    total,
+                    "Kontoauflösung"
+            );
         }
         UserControl.control.deleteAccount((BankAccount)comboBoxAccount.getSelectedItem());
         refreshBankAccounts();

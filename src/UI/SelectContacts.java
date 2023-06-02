@@ -3,9 +3,11 @@ package UI;
 import Data.Person;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class SelectContacts extends JDialog {
@@ -70,19 +72,7 @@ public class SelectContacts extends JDialog {
         for (int i = 0; i < table1.getModel().getRowCount(); i++) {
             boolean sel = (boolean) table1.getModel().getValueAt(i, 3);
             if (sel) {
-                String forename = "";
-                try {
-                    forename = table1.getModel().getValueAt(i, 0).toString();
-                } catch (NullPointerException e) {}
-                String lastname = "";
-                try {
-                    lastname = table1.getModel().getValueAt(i, 1).toString();
-                } catch (NullPointerException e) {}
-                String role = "";
-                try {
-                    role = table1.getModel().getValueAt(i, 2).toString();
-                } catch (NullPointerException e) {}
-                persons.add(new Person(forename, lastname, role));
+                persons.add((Person) table1.getModel().getValueAt(i, 1));
             }
         }
 
@@ -111,7 +101,7 @@ public class SelectContacts extends JDialog {
         for (Person p : UserControl.control.getContacts()) {
             model.addRow(new Object[]{
                     p.forename,
-                    p.lastname,
+                    p,
                     p.role,
                     false
             });
@@ -125,6 +115,17 @@ public class SelectContacts extends JDialog {
                     false
             });
         }
+
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                if (value instanceof Person) {
+                    setText(((Person) value).lastname);
+                }
+                return component;
+            }
+        };
 
         // Erstellen der JTable mit dem TableModel
         table1 = new JTable(model) {
@@ -144,5 +145,6 @@ public class SelectContacts extends JDialog {
         table1.setPreferredScrollableViewportSize(table1.getPreferredSize());
         table1.setShowHorizontalLines(true);
         table1.setShowVerticalLines(false);
+        table1.getColumnModel().getColumn(1).setCellRenderer(renderer);
     }
 }
