@@ -51,14 +51,16 @@ public class Database {
     public Person checkPerson(String forename, String lastname, char[] password) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                "SELECT 'password', role FROM user WHERE forename = ? AND lastname = ?"
+                "SELECT 'password', role, main_account FROM user WHERE forename = ? AND lastname = ?"
             );
             statement.setString(1, forename);
             statement.setString(2, lastname);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 if (new String(password).equals(result.getString("password"))) {
-                    return new Person(forename, lastname, result.getString("role"));
+                    Person p =  new Person(forename, lastname, result.getString("role"));
+                    p.mainAccountName = result.getString("main_account");
+                    return p;
                 }
             }
         } catch (SQLException e) {
@@ -323,5 +325,23 @@ public class Database {
             e.printStackTrace();
         }
         UserControl.control.ui.refreshBankAccounts();
+    }
+
+    public void updateNewMainAccount(Person p, BankAccount b) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE user t SET t.main_account = ? WHERE t.forename= ? AND t.lastname = ?;"
+            );
+            statement.setString(1, b.name);
+            statement.setString(2, p.forename);
+            statement.setString(3, p.lastname);
+            int rowsInserted = statement.executeUpdate();
+            if(rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        UserControl.control.reloadUser();
     }
 }

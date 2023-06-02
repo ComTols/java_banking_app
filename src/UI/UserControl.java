@@ -43,6 +43,7 @@ public class UserControl {
         if (forename == null || lastname == null || password == null) throw new IllegalArgumentException();
         if (forename.isEmpty() || lastname.isEmpty() || password.length == 0) throw new IllegalArgumentException();
 
+        this.password = password;
         this.user = database.checkPerson(forename, lastname, password);
         if (user == null) {
             throw new Exception("Anmeldung fehlgeschlagen.");
@@ -53,6 +54,14 @@ public class UserControl {
         ui.getJMenuBar().getMenu(0).getMenuComponent(1).setVisible(true);
 
         ui.refreshBankAccounts();
+    }
+
+    public void reloadUser() {
+        try {
+            login(user.forename, user.lastname, password);
+        } catch (Exception e) {
+
+        }
     }
 
     public void logout() {
@@ -125,6 +134,14 @@ public class UserControl {
             return null;
         }
         return database.getTransactions(activeAccount);
+    }
+
+    public void updateNewMainAccount(BankAccount b) {
+        if (user == null) {
+            new LoginDialog();
+            return;
+        }
+        database.updateNewMainAccount(user, b);
     }
 
     public boolean isActiveBankAccount(BankAccount b) {

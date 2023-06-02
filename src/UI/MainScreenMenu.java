@@ -76,6 +76,12 @@ public class MainScreenMenu extends JMenuBar {
         });
         fileMenu.add(openItem);
         JMenuItem profileItem = new JMenuItem("Profileinstellungen");
+        profileItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ProfileSettingsDialog();
+            }
+        });
         fileMenu.add(profileItem);
         JMenuItem saveItem = new JMenuItem("Speichern");
         fileMenu.add(saveItem);

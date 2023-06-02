@@ -4,6 +4,7 @@ public class Person {
     public String forename;
     public String lastname;
     public String role;
+    public String mainAccountName;
 
     public Person(String f, String l, String r) {
         forename = f;
