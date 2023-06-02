@@ -1,14 +1,15 @@
 package UI;
 
-import Data.BankAccount;
-import Data.Database;
-import Data.Person;
-import Data.Transaction;
+import CustomExceptions.DuplicateKeyException;
+import Data.*;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 public class UserControl {
 
@@ -150,6 +151,51 @@ public class UserControl {
         database.connect();
     }
 
-    public void createNewBankAccount(int accountType, int parseInt, String text) {
+    public void createNewBankAccount(int accountType, float dispo, String text) throws DuplicateKeyException {
+        if (user == null) {
+            new LoginDialog();
+            return;
+        }
+        BankAccount b = null;
+        switch (accountType) {
+            case 0:
+                b = new BankAccount(user, text);
+                b.setOverdraftFacility(dispo);
+                break;
+            case 1:
+                FixedDepositAccount f = new FixedDepositAccount();
+                b = f;
+                break;
+            case 2:
+                CreditAccount c = new CreditAccount();
+                c.owner = user;
+                c.name = text;
+                c.setOverdraftFacility(dispo);
+                c.referenceAccount = new BankAccount();
+                c.referenceAccount.name = JOptionPane.showInputDialog(ui, "Bitte geben Sie den Namen des Referenzkontos an.", "Referenzkonto", JOptionPane.INFORMATION_MESSAGE);
+                b = c;
+                break;
+            case 3:
+                SavingAccount s = new SavingAccount();
+                s.owner = user;
+                s.name = text;
+                s.setOverdraftFacility(dispo);
+                s.reference = null;
+                b= s;
+                break;
+            case 4:
+                SharedAccount sh = new SharedAccount();
+                sh.name = text;
+                sh.owner = user;
+                sh.setOverdraftFacility(dispo);
+                sh.secondOwner = null;
+                b = sh;
+                break;
+        }
+        try {
+            database.createNewBankAccount(b);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateKeyException();
+        }
     }
 }

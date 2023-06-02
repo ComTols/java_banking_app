@@ -1,4 +1,8 @@
 package Data;
+import CustomExceptions.DuplicateKeyException;
+import UI.UserControl;
+
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +196,7 @@ public class Database {
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 switch (result.getString("type")) {
+                    // TODO: Kontotypen initialisieren
                     case "normal":
                         BankAccount b = new BankAccount(p,result.getString("name"));
                         b.setOverdraftFacility(result.getFloat("overdraftFacility"));
@@ -204,6 +209,13 @@ public class Database {
                     case "shared":
                         break;
                     case "credit":
+                        CreditAccount c = new CreditAccount();
+                        c.name = result.getString("name");
+                        c.referenceAccount = new BankAccount();
+                        c.referenceAccount.name = result.getString("reference");
+                        c.owner = p;
+                        c.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                        list.add(c);
                         break;
                 }
             }
@@ -236,7 +248,6 @@ public class Database {
                 if (from.name.equals(b.name)) {
                     from = b;
                     total = result.getFloat("total") * -1;
-                    //TODO: Wenn to ist anderes Konto, dann neue Abfrage über to.name in accounts um user zu finden
                     PreparedStatement statement2 = connection.prepareStatement(
                             "SELECT * FROM accounts WHERE name = ?;"
                     );
@@ -263,5 +274,54 @@ public class Database {
         }
 
         return list.toArray(new Transaction[0]);
+    }
+
+    public void createNewBankAccount(BankAccount b) throws DuplicateKeyException {
+        String[] values = new String[9];
+        values[0] = b.name;
+        values[1] = b.owner.forename;
+        values[2] = b.owner.lastname;
+        values[3] = String.valueOf(b.getOverdraftFacility());
+        values[8] = "normal";
+        if (b instanceof CreditAccount) {
+            values[7] = ((CreditAccount) b).referenceAccount.name;
+            values[8] = "credit";
+        } else if (b instanceof FixedDepositAccount) {
+
+        } else if (b instanceof SavingAccount) {
+            values[3] = "0";
+            values[7] = ((SavingAccount) b).reference.name;
+            values[8] = "saving";
+        } else if (b instanceof SharedAccount) {
+            values[5] = ((SharedAccount) b).secondOwner.forename;
+            values[6] = ((SharedAccount) b).secondOwner.lastname;
+            values[8] = "shared";
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO java_banking.accounts (`name`, forename, lastname, overdraftFacility, accessDate, secound_forename," +
+                            "                                   secound_lastname, reference, `type`)" +
+                            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+            for (int i = 0; i < values.length; i++) {
+                if (i == 3) {
+                    statement.setFloat(i+1, Float.valueOf(values[i]));
+                } else {
+                    statement.setString(i+1, values[i]);
+                }
+            }
+            int rowsInserted = 0;
+            try {
+                rowsInserted = statement.executeUpdate();
+            } catch (SQLException e) {
+                throw new DuplicateKeyException();
+            }
+            if(rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        UserControl.control.ui.refreshBankAccounts();
     }
 }

@@ -1,21 +1,27 @@
 package UI;
 
+import CustomExceptions.DuplicateKeyException;
+import Data.BankAccount;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 public class NewAccountDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JRadioButton girokontoRadioButton;
-    private JRadioButton festgeldkontoRadioButton;
-    private JRadioButton kreditkarteRadioButton;
-    private JRadioButton depotRadioButton;
+    private JRadioButton fixedDepositAccountRadioButton;
+    private JRadioButton creditAccountRadioButton;
+    private JRadioButton savingsAccountRadioButton;
     private JTextField textFieldDispo;
     private JButton infoButton;
     private JTextField textFieldName;
-    private ButtonGroup buttonGroupType;
+    private JRadioButton sharedAccountRadioButton;
+    private ButtonGroup buttonGroupAccountType;
 
     public NewAccountDialog() {
         setContentPane(contentPane);
@@ -77,7 +83,7 @@ public class NewAccountDialog extends JDialog {
 
     private void onOK() {
         // add your code here
-        if (buttonGroupType.getSelection() == null) {
+        if (buttonGroupAccountType.getSelection() == null) {
             JOptionPane.showMessageDialog(
                     this,
                     "Sie müssen einen Kontotyp auswählen!",
@@ -96,26 +102,41 @@ public class NewAccountDialog extends JDialog {
             return;
         }
 
+        textFieldDispo.setText(textFieldDispo.getText().replace(",", "."));
         try {
-            Integer.parseInt(textFieldDispo.getText());
+            Float.parseFloat(textFieldDispo.getText());
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(
                     this,
-                    "Sie müssen einen gültigen ganzzahligen Wert als maximalen Dispositionskredit angeben!",
+                    "Sie müssen einen gültigen Wert als maximalen Dispositionskredit angeben!",
                     "Dispo ungültig",
                     JOptionPane.ERROR_MESSAGE
             );
             return;
         }
+        float dispo = Float.parseFloat(textFieldDispo.getText());
+        dispo = Math.round(dispo * 100f)/100f;
+        if (dispo < 0) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "Sie müssen einen gültigen positiven Wert als maximalen Dispositionskredit angeben!",
+                    "Dispo negativ",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
         int accountType = -1;
-        if (buttonGroupType.isSelected(girokontoRadioButton.getModel())) {
+        BankAccount b;
+        if (buttonGroupAccountType.isSelected(girokontoRadioButton.getModel())) {
             accountType = 0;
-        }else if (buttonGroupType.isSelected(festgeldkontoRadioButton.getModel())) {
+        }else if (buttonGroupAccountType.isSelected(fixedDepositAccountRadioButton.getModel())) {
             accountType = 1;
-        }else if (buttonGroupType.isSelected(kreditkarteRadioButton.getModel())) {
+        }else if (buttonGroupAccountType.isSelected(creditAccountRadioButton.getModel())) {
             accountType = 2;
-        }else if (buttonGroupType.isSelected(depotRadioButton.getModel())) {
+        }else if (buttonGroupAccountType.isSelected(savingsAccountRadioButton.getModel())) {
             accountType = 3;
+        } else if (buttonGroupAccountType.isSelected(sharedAccountRadioButton.getModel())) {
+            accountType = 4;
         } else {
             JOptionPane.showMessageDialog(
                     this,
@@ -125,19 +146,17 @@ public class NewAccountDialog extends JDialog {
             );
             return;
         }
-        UserControl.control.createNewBankAccount(accountType, Integer.parseInt(textFieldDispo.getText()), textFieldName.getText());
+        try {
+            UserControl.control.createNewBankAccount(accountType, dispo, textFieldName.getText());
+        } catch (DuplicateKeyException e) {
+            JOptionPane.showMessageDialog(this, "Der Kontoname ist bereits version! Bitte wählen Sie einen anderen.", "Name bereits vergeben", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         dispose();
     }
 
     private void onCancel() {
         // add your code here if necessary
         dispose();
-    }
-
-    public static void main(String[] args) {
-        NewAccountDialog dialog = new NewAccountDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
     }
 }
