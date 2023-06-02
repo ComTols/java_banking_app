@@ -20,6 +20,8 @@ public class MainScreen extends JFrame {
     private JScrollPane scrollPane;
     private JButton btnAccountinfo;
     private JLabel labelTotal;
+    private JButton btnDelete;
+    private float total = 0f;
 
     public MainScreen() {
         setContentPane(panelMain);
@@ -42,6 +44,28 @@ public class MainScreen extends JFrame {
                 showBankAccountInfos();
             }
         });
+        btnDelete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteAccount();
+            }
+        });
+    }
+
+    private void deleteAccount() {
+        if(total < 0) {
+            JOptionPane.showMessageDialog(this, "Sie müssen zuerst das Konto ausgleichen!", "Kontostand negativ", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (UserControl.control.getUser().mainAccountName.equals(((BankAccount)comboBoxAccount.getSelectedItem()).name)) {
+            JOptionPane.showMessageDialog(this, "Sie können Ihr Hauptkonto nicht löschen!", "Hauptkonto", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (total > 0) {
+            // TODO: tranfer money to main account
+        }
+        UserControl.control.deleteAccount((BankAccount)comboBoxAccount.getSelectedItem());
+        refreshBankAccounts();
     }
 
     private void showBankAccountInfos() {
@@ -94,6 +118,7 @@ public class MainScreen extends JFrame {
         DecimalFormat decimalFormat = new DecimalFormat("#,##0.00 €");
 
         labelTotal.setText("Kontostand: " + decimalFormat.format(totalAccount));
+        total = totalAccount;
     }
 
     private void createAndShowGui() {

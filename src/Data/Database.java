@@ -420,4 +420,23 @@ public class Database {
             e.printStackTrace();
         }
     }
+
+    public void deleteAccount(BankAccount b) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM accounts " +
+                            "WHERE " +
+                            "forename = ? AND lastname = ? AND name = ?"
+            );
+            statement.setString(1, b.owner.forename);
+            statement.setString(2, b.owner.lastname);
+            statement.setString(3, b.name);
+            int rowsInserted = statement.executeUpdate();
+            if(rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

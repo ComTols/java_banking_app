@@ -232,4 +232,8 @@ public class UserControl {
             throw new DuplicateKeyException();
         }
     }
+
+    public void deleteAccount(BankAccount b) {
+        database.deleteAccount(b);
+    }
 }
