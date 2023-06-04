@@ -243,4 +243,13 @@ public class UserControl {
         database.moveMoney(f,t, total, p);
         ui.refreshTransactions();
     }
+
+    public PayRequest[] getPayRequests() {
+        if (user == null) {
+            new LoginDialog();
+            return null;
+        }
+        // TODO: Database schreiben...
+        return null;
+    }
 }

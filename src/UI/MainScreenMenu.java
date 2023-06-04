@@ -39,6 +39,14 @@ public class MainScreenMenu extends JMenuBar {
             }
         });
         transferMenu.add(requestItem);
+        JMenuItem payItem = new JMenuItem("Rechnung begleichen");
+        payItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new PayDialog();
+            }
+        });
+        transferMenu.add(payItem);
         JMenuItem standingOrderItem = new JMenuItem("Dauerauftrag");
         transferMenu.add(standingOrderItem);
         JMenuItem plannedTransactionItem = new JMenuItem("Geplante Buchungen");
