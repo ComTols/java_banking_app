@@ -253,7 +253,8 @@ public class Database {
                     "SELECT * FROM transactions as t, accounts as a" +
                             "         WHERE" +
                             "             a.name = t.from_account AND" +
-                            "             (t.from_account = ? OR t.to_account = ?);"
+                            "             (t.from_account = ? OR t.to_account = ?)" +
+                            "         ORDER BY time DESC;"
             );
             statement.setString(1, b.name);
             statement.setString(2, b.name);
@@ -271,7 +272,7 @@ public class Database {
                             "SELECT * FROM accounts WHERE name = ?;"
                     );
                     statement2.setString(1, to.name);
-                    ResultSet result2 = statement.executeQuery();
+                    ResultSet result2 = statement2.executeQuery();
                     while (result2.next()) {
                         to.owner = new Person(
                                 result2.getString("forename"),
@@ -286,7 +287,7 @@ public class Database {
                             result.getString("lastname")
                     );
                 }
-                list.add(new Transaction(from, to, total, result.getString("purpose"), result.getDate("time")));
+                list.add(new Transaction(from, to, total, result.getString("purpose"), result.getTimestamp("time")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

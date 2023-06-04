@@ -150,7 +150,7 @@ public class MainScreen extends JFrame {
             }
         };
         model.addColumn("Datum");
-        model.addColumn("Absender");
+        model.addColumn("Gegenseite");
         model.addColumn("Verwendungszweck");
         model.addColumn("Betrag");
 
