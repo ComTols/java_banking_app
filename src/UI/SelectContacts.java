@@ -110,7 +110,7 @@ public class SelectContacts extends JDialog {
         if (selfIncluded) {
             model.addRow(new Object[]{
                     UserControl.control.getUser().forename,
-                    UserControl.control.getUser().lastname,
+                    UserControl.control.getUser(),
                     UserControl.control.getUser().role,
                     false
             });

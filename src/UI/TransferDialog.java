@@ -152,6 +152,7 @@ public class TransferDialog extends JDialog implements ISelectReceiver {
                 textAreaPurpose.getText()
             );
 
+        UserControl.control.ui.refreshTransactions();
         dispose();
     }
 
@@ -168,7 +169,7 @@ public class TransferDialog extends JDialog implements ISelectReceiver {
     }
 
     private void selectContacts() {
-        new SelectContacts(this, true);
+        new SelectContacts(this, false);
     }
 
     @Override

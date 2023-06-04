@@ -238,4 +238,9 @@ public class UserControl {
     public void deleteAccount(BankAccount b) {
         database.deleteAccount(b);
     }
+
+    public void moveMoney(BankAccount f, BankAccount t, float total, String p) {
+        database.moveMoney(f,t, total, p);
+        ui.refreshTransactions();
+    }
 }

@@ -23,6 +23,14 @@ public class MainScreenMenu extends JMenuBar {
             }
         });
         transferMenu.add(transactionItem);
+        JMenuItem moveMoney = new JMenuItem("Auf Konto bewegen");
+        moveMoney.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new MoveMoneyDialog();
+            }
+        });
+        transferMenu.add(moveMoney);
         JMenuItem requestItem = new JMenuItem("Geld anfordern");
         requestItem.addActionListener(new ActionListener() {
             @Override

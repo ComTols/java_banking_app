@@ -29,7 +29,7 @@ public class Database {
 
         System.out.println("Verbinde Datenbank...");
 
-        try{
+        try {
             Connection connection = DriverManager.getConnection(url, username, password);
             System.out.println("Database connected!");
             this.connection = connection;
@@ -50,14 +50,14 @@ public class Database {
     public Person checkPerson(String forename, String lastname, char[] password) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                "SELECT 'password', role, main_account FROM user WHERE forename = ? AND lastname = ?"
+                    "SELECT 'password', role, main_account FROM user WHERE forename = ? AND lastname = ?"
             );
             statement.setString(1, forename);
             statement.setString(2, lastname);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 if (new String(password).equals(result.getString("password"))) {
-                    Person p =  new Person(forename, lastname, result.getString("role"));
+                    Person p = new Person(forename, lastname, result.getString("role"));
                     p.mainAccountName = result.getString("main_account");
                     return p;
                 }
@@ -102,9 +102,9 @@ public class Database {
                     Person l = list.get(i);
                     if (
                             l.forename.equals(result.getString("first_forename")) ||
-                            l.forename.equals(result.getString("second_forename")) ||
-                            l.lastname.equals(result.getString("first_lastname")) ||
-                            l.lastname.equals(result.getString("secound_lastname"))
+                                    l.forename.equals(result.getString("second_forename")) ||
+                                    l.lastname.equals(result.getString("first_lastname")) ||
+                                    l.lastname.equals(result.getString("secound_lastname"))
                     ) {
                         list.remove(i);
                         i--;
@@ -137,14 +137,14 @@ public class Database {
     private void handleContactsResponse(Person p, ArrayList<Person> list, ResultSet result) throws SQLException {
         while (result.next()) {
             String forename = "";
-            if(p.forename.equals(result.getString("first_forename"))) {
+            if (p.forename.equals(result.getString("first_forename"))) {
                 forename = result.getString("second_forename");
             } else {
                 forename = result.getString("first_forename");
             }
 
             String lastname = "";
-            if(p.lastname.equals(result.getString("first_lastname"))) {
+            if (p.lastname.equals(result.getString("first_lastname"))) {
                 lastname = result.getString("secound_lastname");
             } else {
                 lastname = result.getString("first_lastname");
@@ -190,16 +190,15 @@ public class Database {
 
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM accounts WHERE forename = ? AND lastname = ?"
+                    "SELECT * FROM accounts WHERE forename = ? AND lastname = ? AND inactive = false"
             );
             statement.setString(1, p.forename);
             statement.setString(2, p.lastname);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 switch (result.getString("type")) {
-                    // TODO: Kontotypen initialisieren
                     case "normal":
-                        BankAccount b = new BankAccount(p,result.getString("name"));
+                        BankAccount b = new BankAccount(p, result.getString("name"));
                         b.setOverdraftFacility(result.getFloat("overdraftFacility"));
                         list.add(b);
                         break;
@@ -252,7 +251,7 @@ public class Database {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT * FROM transactions as t, accounts as a" +
                             "         WHERE" +
-                            "             a.name = t.from_account AND" +
+                            "             (a.name = t.from_account) AND" +
                             "             (t.from_account = ? OR t.to_account = ?)" +
                             "         ORDER BY time DESC;"
             );
@@ -325,9 +324,9 @@ public class Database {
             );
             for (int i = 0; i < values.length; i++) {
                 if (i == 3) {
-                    statement.setFloat(i+1, Float.valueOf(values[i]));
+                    statement.setFloat(i + 1, Float.valueOf(values[i]));
                 } else {
-                    statement.setString(i+1, values[i]);
+                    statement.setString(i + 1, values[i]);
                 }
             }
             int rowsInserted = 0;
@@ -336,7 +335,7 @@ public class Database {
             } catch (SQLException e) {
                 throw new DuplicateKeyException();
             }
-            if(rowsInserted != 1) {
+            if (rowsInserted != 1) {
                 System.out.println(rowsInserted);
             }
         } catch (SQLException e) {
@@ -354,7 +353,7 @@ public class Database {
             statement.setString(2, p.forename);
             statement.setString(3, p.lastname);
             int rowsInserted = statement.executeUpdate();
-            if(rowsInserted != 1) {
+            if (rowsInserted != 1) {
                 System.out.println(rowsInserted);
             }
         } catch (SQLException e) {
@@ -381,7 +380,7 @@ public class Database {
             statement.setString(7, other.forename);
             statement.setString(8, other.lastname);
             int rowsInserted = statement.executeUpdate();
-            if(rowsInserted != 1) {
+            if (rowsInserted != 1) {
                 System.out.println(rowsInserted);
             }
         } catch (SQLException e) {
@@ -400,7 +399,7 @@ public class Database {
             statement.setString(3, other.forename);
             statement.setString(4, other.lastname);
             int rowsInserted = statement.executeUpdate();
-            if(rowsInserted != 1) {
+            if (rowsInserted != 1) {
                 System.out.println(rowsInserted);
             }
         } catch (SQLException e) {
@@ -427,7 +426,7 @@ public class Database {
             statement.setString(7, other.forename);
             statement.setString(8, other.lastname);
             int rowsInserted = statement.executeUpdate();
-            if(rowsInserted != 1) {
+            if (rowsInserted != 1) {
                 System.out.println(rowsInserted);
             }
         } catch (SQLException e) {
@@ -438,7 +437,8 @@ public class Database {
     public void deleteAccount(BankAccount b) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "DELETE FROM accounts " +
+                    "UPDATE accounts " +
+                            "SET inactive = true " +
                             "WHERE " +
                             "forename = ? AND lastname = ? AND name = ?"
             );
@@ -446,7 +446,7 @@ public class Database {
             statement.setString(2, b.owner.lastname);
             statement.setString(3, b.name);
             int rowsInserted = statement.executeUpdate();
-            if(rowsInserted != 1) {
+            if (rowsInserted != 1) {
                 System.out.println(rowsInserted);
             }
         } catch (SQLException e) {
@@ -455,7 +455,6 @@ public class Database {
     }
 
     public void moneyTransaction(BankAccount f, Person t, float total, String purpose) {
-        System.out.println(t.mainAccountName);
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "INSERT INTO transactions (from_account, to_account, total, purpose) " +
@@ -466,7 +465,26 @@ public class Database {
             statement.setFloat(3, total);
             statement.setString(4, purpose);
             int rowsInserted = statement.executeUpdate();
-            if(rowsInserted != 1) {
+            if (rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void moveMoney(BankAccount f, BankAccount t, float v, String p) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO transactions (from_account, to_account, total, purpose) " +
+                            "VALUES (?,?,?,?)"
+            );
+            statement.setString(1, f.name);
+            statement.setString(2, t.name);
+            statement.setFloat(3, v);
+            statement.setString(4, p);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted != 1) {
                 System.out.println(rowsInserted);
             }
         } catch (SQLException e) {
