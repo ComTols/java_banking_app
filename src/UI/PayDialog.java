@@ -15,7 +15,6 @@ import java.text.DecimalFormat;
 public class PayDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
-    private JButton buttonCancel;
     private JTable table1;
     private JComboBox comboBox1;
 
@@ -31,12 +30,6 @@ public class PayDialog extends JDialog {
         }
 
         buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
             }
