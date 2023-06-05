@@ -1,5 +1,6 @@
 package UI;
 
+import Data.BankAccount;
 import Data.PayRequest;
 import Data.Person;
 
@@ -25,6 +26,10 @@ public class PayDialog extends JDialog {
         setIconImage(new ImageIcon("src/assets/wallet.png").getImage());
         setTitle("Ausstehende Anfragen");
 
+        for (BankAccount b : UserControl.control.getBankAccounts()) {
+            comboBox1.addItem(b);
+        }
+
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
@@ -33,7 +38,7 @@ public class PayDialog extends JDialog {
 
         buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onCancel();
+                onOK();
             }
         });
 
@@ -41,14 +46,14 @@ public class PayDialog extends JDialog {
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                onCancel();
+                onOK();
             }
         });
 
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onCancel();
+                onOK();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
@@ -59,11 +64,6 @@ public class PayDialog extends JDialog {
 
     private void onOK() {
         // add your code here
-        dispose();
-    }
-
-    private void onCancel() {
-        // add your code here if necessary
         dispose();
     }
 
@@ -101,14 +101,16 @@ public class PayDialog extends JDialog {
         table1.getColumnModel().getColumn(3).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                // UserControl.control.transferMoney();
+                PayRequest payRequest = (PayRequest) table1.getValueAt(row, 0);
+                UserControl.control.pay(payRequest, (BankAccount)comboBox1.getSelectedItem());
             }
         });
         table1.getColumnModel().getColumn(4).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
         table1.getColumnModel().getColumn(4).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                // TODO: Ablehnen
+                PayRequest payRequest = (PayRequest) table1.getValueAt(row, 0);
+                UserControl.control.deletePayRequest(payRequest);
             }
         });
         table1.setPreferredScrollableViewportSize(table1.getPreferredSize());
@@ -116,7 +118,7 @@ public class PayDialog extends JDialog {
         table1.setShowVerticalLines(false);
 
         // Beträge in rot darstellen
-        DefaultTableCellRenderer renderer = new AmountTableCellRenderer();
+        DefaultTableCellRenderer renderer = new AmountTableCellRenderer(2);
 
         table1.getColumnModel().getColumn(2).setCellRenderer(renderer);
     }

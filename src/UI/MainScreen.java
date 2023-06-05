@@ -174,7 +174,7 @@ public class MainScreen extends JFrame {
         table1.getColumnModel().getColumn(2).setPreferredWidth(1000);
 
         // Beträge in rot darstellen
-        DefaultTableCellRenderer renderer = new AmountTableCellRenderer();
+        DefaultTableCellRenderer renderer = new AmountTableCellRenderer(3);
 
         table1.getColumnModel().getColumn(3).setCellRenderer(renderer);
     }

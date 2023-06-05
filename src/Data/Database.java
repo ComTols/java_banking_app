@@ -6,6 +6,7 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Database {
 
@@ -490,5 +491,35 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public PayRequest[] getPayRequests (Person p) {
+        ArrayList<PayRequest> list = new ArrayList<>();
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM pay as p, accounts as a WHERE p.from = a.name AND p.to_forename = ? AND p.to_lastname = ?"
+            );
+            statement.setString(1, p.forename);
+            statement.setString(2, p.lastname);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                PayRequest pay = new PayRequest();
+                pay.id = result.getInt("ID");
+                pay.from = new BankAccount();
+                pay.from.name = result.getString("from");
+                pay.from.owner = new Person(
+                        result.getString("forename"),
+                        result.getString("lastname")
+                );
+                pay.total = result.getFloat("total");
+                pay.purpose = result.getString("purpose");
+                list.add(pay);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list.toArray(new PayRequest[]{});
     }
 }

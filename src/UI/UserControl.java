@@ -249,7 +249,22 @@ public class UserControl {
             new LoginDialog();
             return null;
         }
-        // TODO: Database schreiben...
-        return null;
+        return database.getPayRequests(user);
+    }
+
+    public void pay(PayRequest p, BankAccount from) {
+        if (user == null) {
+            new LoginDialog();
+            return;
+        }
+        //TODO: transfer
+    }
+
+    public void deletePayRequest(PayRequest p) {
+        // TODO: delete
+    }
+
+    public void createPayRequests(PayRequest[] p) {
+        // TODO: create
     }
 }

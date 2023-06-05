@@ -1,11 +1,13 @@
 package UI;
 
 import Data.BankAccount;
+import Data.PayRequest;
 import Data.Person;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
     private JPanel contentPane;
@@ -108,7 +110,15 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
         int choice = JOptionPane.showConfirmDialog(this, "Möchten Sie " + total + "€ anfordern?");
 
         if (choice == JOptionPane.OK_OPTION) {
-            // TODO: UserControl ausführen
+            ArrayList<PayRequest> requests = new ArrayList<>();
+            for (int i = 0; i < listFrom.getModel().getSize(); i++) {
+                PayRequest pay = new PayRequest();
+                pay.to = ((Person) listFrom.getModel().getElementAt(i));
+                pay.purpose = textAreaPurpose.getText();
+                pay.total = total;
+                requests.add(pay);
+            }
+            UserControl.control.createPayRequests(requests.toArray(new PayRequest[0]));
             dispose();
         }
     }

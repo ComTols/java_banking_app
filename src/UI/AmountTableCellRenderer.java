@@ -7,11 +7,17 @@ import java.text.DecimalFormat;
 
 public class AmountTableCellRenderer extends DefaultTableCellRenderer {
 
+    private int row;
+
+    public AmountTableCellRenderer(int row) {
+        this.row = row;
+    }
+
     DecimalFormat decimalFormat = new DecimalFormat("#,##0.00 €");
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         Component component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        if (column == 3 && value != null) {
+        if (column == this.row && value != null) {
             if((float)value < 0) {
                 component.setForeground(Color.RED); // Beträge in rot darstellen
             } else {
