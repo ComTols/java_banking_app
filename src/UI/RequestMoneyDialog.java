@@ -116,6 +116,7 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
                 pay.to = ((Person) listFrom.getModel().getElementAt(i));
                 pay.purpose = textAreaPurpose.getText();
                 pay.total = total;
+                pay.from = (BankAccount) comboBoxAccount.getSelectedItem();
                 requests.add(pay);
             }
             UserControl.control.createPayRequests(requests.toArray(new PayRequest[0]));
@@ -126,13 +127,6 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
     private void onCancel() {
         // add your code here if necessary
         dispose();
-    }
-
-    public static void main(String[] args) {
-        RequestMoneyDialog dialog = new RequestMoneyDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
     }
 
     @Override

@@ -257,14 +257,16 @@ public class UserControl {
             new LoginDialog();
             return;
         }
-        //TODO: transfer
+        database.pay(p, from);
+        database.deletePayRequest(p);
+        ui.refreshTransactions();
     }
 
     public void deletePayRequest(PayRequest p) {
-        // TODO: delete
+        database.deletePayRequest(p);
     }
 
-    public void createPayRequests(PayRequest[] p) {
-        // TODO: create
+    public PayRequest[] createPayRequests(PayRequest[] p) {
+        return database.createPayRequests(p);
     }
 }

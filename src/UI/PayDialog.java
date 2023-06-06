@@ -95,7 +95,11 @@ public class PayDialog extends JDialog {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
                 PayRequest payRequest = (PayRequest) table1.getValueAt(row, 0);
-                UserControl.control.pay(payRequest, (BankAccount)comboBox1.getSelectedItem());
+                int choice = JOptionPane.showConfirmDialog(null, "Möchten Sie " + payRequest.total + " an " + payRequest.from.owner + " bezahlen?", "Überweisung bestätigen",JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.OK_OPTION) {
+                    UserControl.control.pay(payRequest, (BankAccount)comboBox1.getSelectedItem());
+                    refreshPays();
+                }
             }
         });
         table1.getColumnModel().getColumn(4).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
@@ -103,7 +107,11 @@ public class PayDialog extends JDialog {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
                 PayRequest payRequest = (PayRequest) table1.getValueAt(row, 0);
-                UserControl.control.deletePayRequest(payRequest);
+                int choice = JOptionPane.showConfirmDialog(null, "Möchten Sie die Anfrage von " + payRequest.from.owner + " wirklich löschen?", "Rechnung ablehnen",JOptionPane.OK_CANCEL_OPTION);
+                if (choice == JOptionPane.OK_OPTION) {
+                    UserControl.control.deletePayRequest(payRequest);
+                    refreshPays();
+                }
             }
         });
         table1.setPreferredScrollableViewportSize(table1.getPreferredSize());
@@ -114,5 +122,22 @@ public class PayDialog extends JDialog {
         DefaultTableCellRenderer renderer = new AmountTableCellRenderer(2);
 
         table1.getColumnModel().getColumn(2).setCellRenderer(renderer);
+    }
+
+    private void refreshPays() {
+        DefaultTableModel model = (DefaultTableModel) table1.getModel();
+        int rowCount = table1.getModel().getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            model.removeRow(i);
+        }
+        for (PayRequest p : UserControl.control.getPayRequests()) {
+            model.addRow(new Object[] {
+                    p,
+                    p.purpose,
+                    p.total,
+                    "Bezahlen",
+                    "Ablehnen"
+            });
+        }
     }
 }

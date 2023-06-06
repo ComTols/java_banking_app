@@ -522,4 +522,68 @@ public class Database {
 
         return list.toArray(new PayRequest[]{});
     }
+
+    public void pay(PayRequest p, BankAccount from) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO transactions (from_account, to_account, total, purpose) " +
+                            "VALUES (?,?,?,?)"
+            );
+            statement.setString(1, from.name);
+            statement.setString(2, p.from.name);
+            statement.setFloat(3, p.total);
+            statement.setString(4, p.purpose);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePayRequest(PayRequest p) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE " +
+                            "FROM pay " +
+                            "WHERE ID = ?;"
+            );
+            statement.setInt(1, p.id);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public PayRequest[] createPayRequests(PayRequest[] p) {
+        for (PayRequest pay : p) {
+            try {
+                PreparedStatement statement = connection.prepareStatement(
+                        "INSERT INTO java_banking.pay (`from`, to_forename, to_lastname, total, purpose) " +
+                                "VALUES (?,?,?,?,?);",
+                        Statement.RETURN_GENERATED_KEYS
+                );
+                statement.setString(1, pay.from.name);
+                statement.setString(2, pay.to.forename);
+                statement.setString(3, pay.to.lastname);
+                statement.setFloat(4, pay.total);
+                statement.setString(5, pay.purpose);
+                int rowsInserted = statement.executeUpdate();
+                if (rowsInserted != 1) {
+                    System.out.println(rowsInserted);
+                }
+                ResultSet r = statement.getGeneratedKeys();
+                while (r.next()) {
+                    pay.id = r.getInt(1);
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return p;
+    }
 }
