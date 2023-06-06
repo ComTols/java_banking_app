@@ -4,6 +4,7 @@ import CustomExceptions.DuplicateKeyException;
 import Data.*;
 
 import javax.swing.*;
+import java.util.Date;
 
 public class UserControl {
 
@@ -105,6 +106,9 @@ public class UserControl {
 
     public void transferMoney(BankAccount account, Person[] receivers, float total, String purpose) {
         for (Person r : receivers) {
+            if (!transactionAllowed(account, r.mainAccountName)) {
+                continue;
+            }
             database.moneyTransaction(account, r, total, purpose);
         }
     }
@@ -151,6 +155,10 @@ public class UserControl {
     public void updateNewMainAccount(BankAccount b) {
         if (user == null) {
             new LoginDialog();
+            return;
+        }
+        if(b instanceof CreditAccount || b instanceof SavingAccount || b instanceof FixedDepositAccount) {
+            JOptionPane.showMessageDialog(ui, "Sie können nur Girokonten und Gemeinschaftskonten als Standard wählen!", "Kontotyp nicht unterstützt", JOptionPane.ERROR_MESSAGE);
             return;
         }
         database.updateNewMainAccount(user, b);
@@ -240,6 +248,9 @@ public class UserControl {
     }
 
     public void moveMoney(BankAccount f, BankAccount t, float total, String p) {
+        if (!transactionAllowed(f, t)) {
+            return;
+        }
         database.moveMoney(f,t, total, p);
         ui.refreshTransactions();
     }
@@ -257,6 +268,9 @@ public class UserControl {
             new LoginDialog();
             return;
         }
+        if (!transactionAllowed(p.from, from)) {
+            return;
+        }
         database.pay(p, from);
         database.deletePayRequest(p);
         ui.refreshTransactions();
@@ -268,5 +282,43 @@ public class UserControl {
 
     public PayRequest[] createPayRequests(PayRequest[] p) {
         return database.createPayRequests(p);
+    }
+
+    private boolean transactionAllowed(BankAccount from, BankAccount to) {
+        if (from instanceof FixedDepositAccount) {
+            if (((FixedDepositAccount) from).accessDate.after(new Date())) {
+                JOptionPane.showMessageDialog(ui, "Sie können erst am "+((FixedDepositAccount) from).accessDate+" Ihr Geld bewegen!", "Zugriffsdatum liegt in der Zukunft", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        if (from instanceof SavingAccount) {
+            if (!((SavingAccount) from).reference.name.equals(to.name)) {
+                JOptionPane.showMessageDialog(ui, "Sie können von einem Sparkonto nur auf Ihr Referenzkonto "+((SavingAccount) from).reference.name+" überweisen!", "Kein Referenzkonto", JOptionPane.ERROR_MESSAGE);
+                return false;
+
+            }
+        }
+        if (to instanceof CreditAccount) {
+            JOptionPane.showMessageDialog(ui, "Sie können auf eine Kreditkarte kein Geld überweisen!", "Ziel ist Kreditkarte", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+
+    private boolean transactionAllowed(BankAccount from, String to) {
+        if (from instanceof FixedDepositAccount) {
+            if (((FixedDepositAccount) from).accessDate.after(new Date())) {
+                JOptionPane.showMessageDialog(ui, "Sie können erst am "+((FixedDepositAccount) from).accessDate+" Ihr Geld bewegen!", "Zugriffsdatum liegt in der Zukunft", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        if (from instanceof SavingAccount) {
+            if (!((SavingAccount) from).reference.name.equals(to)) {
+                JOptionPane.showMessageDialog(ui, "Sie können von einem Sparkonto nur auf Ihr Referenzkonto "+((SavingAccount) from).reference.name+" überweisen!", "Kein Referenzkonto", JOptionPane.ERROR_MESSAGE);
+                return false;
+
+            }
+        }
+        return true;
     }
 }

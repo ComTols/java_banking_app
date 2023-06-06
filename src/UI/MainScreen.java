@@ -1,13 +1,13 @@
 package UI;
 
 import Data.BankAccount;
+import Data.CreditAccount;
 import Data.Person;
 import Data.Transaction;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -22,6 +22,7 @@ public class MainScreen extends JFrame {
     private JButton btnAccountinfo;
     private JLabel labelTotal;
     private JButton btnDelete;
+    private JButton btnBalance;
     private float total = 0f;
 
     public MainScreen() {
@@ -35,6 +36,11 @@ public class MainScreen extends JFrame {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 UserControl.control.setActiveAccount((BankAccount) comboBoxAccount.getSelectedItem());
+                if (UserControl.control.getActiveAccount() instanceof CreditAccount) {
+                    btnBalance.setEnabled(true);
+                } else {
+                    btnBalance.setEnabled(false);
+                }
                 refreshTransactions();
             }
         });
@@ -98,6 +104,11 @@ public class MainScreen extends JFrame {
                 comboBoxAccount.addItem(b);
             }
         } catch (NullPointerException e) {}
+        if (UserControl.control.getActiveAccount() instanceof CreditAccount) {
+            btnBalance.setEnabled(true);
+        } else {
+            btnBalance.setEnabled(false);
+        }
         refreshTransactions();
     }
 
