@@ -162,9 +162,9 @@ public class MainScreen extends JFrame {
         table1.setRowHeight(30);
 
         // Anpassen der Spaltenbreite
-        table1.getColumnModel().getColumn(0).setPreferredWidth(90);
-        table1.getColumnModel().getColumn(1).setPreferredWidth(120);
-        table1.getColumnModel().getColumn(3).setPreferredWidth(90);
+        table1.getColumnModel().getColumn(0).setPreferredWidth(200);
+        table1.getColumnModel().getColumn(1).setPreferredWidth(240);
+        table1.getColumnModel().getColumn(3).setPreferredWidth(200);
 
         // Anpassen der Zeilenhöhe
         table1.setRowHeight(30);

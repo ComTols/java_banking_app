@@ -47,10 +47,6 @@ public class MainScreenMenu extends JMenuBar {
             }
         });
         transferMenu.add(payItem);
-        JMenuItem standingOrderItem = new JMenuItem("Dauerauftrag");
-        transferMenu.add(standingOrderItem);
-        JMenuItem plannedTransactionItem = new JMenuItem("Geplante Buchungen");
-        transferMenu.add(plannedTransactionItem);
         return transferMenu;
     }
 

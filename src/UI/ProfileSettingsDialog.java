@@ -21,6 +21,9 @@ public class ProfileSettingsDialog extends JDialog {
         setIconImage(new ImageIcon("src/assets/sign.png").getImage());
         setTitle("Profileinstellungen");
 
+        textFieldForename.setText(UserControl.control.getUser().forename);
+        textFieldLastname.setText(UserControl.control.getUser().lastname);
+
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
