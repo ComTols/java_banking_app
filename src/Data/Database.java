@@ -191,10 +191,13 @@ public class Database {
 
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM accounts WHERE forename = ? AND lastname = ? AND inactive = false"
+                    "SELECT * FROM accounts WHERE ((forename = ? AND lastname = ?) OR " +
+                            "(secound_forename = ? AND secound_lastname = ?)) AND inactive = false"
             );
             statement.setString(1, p.forename);
             statement.setString(2, p.lastname);
+            statement.setString(3, p.forename);
+            statement.setString(4, p.lastname);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 switch (result.getString("type")) {
@@ -226,6 +229,7 @@ public class Database {
                         sh.name = result.getString("name");
                         sh.setOverdraftFacility(result.getFloat("overdraftFacility"));
                         sh.secondOwner = new Person(result.getString("secound_forename"), result.getString("secound_lastname"));
+                        list.add(sh);
                         break;
                     case "credit":
                         CreditAccount c = new CreditAccount();
@@ -441,11 +445,13 @@ public class Database {
                     "UPDATE accounts " +
                             "SET inactive = true " +
                             "WHERE " +
-                            "forename = ? AND lastname = ? AND name = ?"
+                            "((forename = ? AND lastname = ?) OR (secound_forename = ? AND secound_lastname = ?)) AND name = ?"
             );
             statement.setString(1, b.owner.forename);
             statement.setString(2, b.owner.lastname);
-            statement.setString(3, b.name);
+            statement.setString(3, b.owner.forename);
+            statement.setString(4, b.owner.lastname);
+            statement.setString(5, b.name);
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted != 1) {
                 System.out.println(rowsInserted);

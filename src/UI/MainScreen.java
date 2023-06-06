@@ -62,6 +62,10 @@ public class MainScreen extends JFrame {
             JOptionPane.showMessageDialog(this, "Sie können Ihr Hauptkonto nicht löschen!", "Hauptkonto", JOptionPane.ERROR_MESSAGE);
             return;
         }
+        int choice = JOptionPane.showConfirmDialog(this, "Möchten Sie das Konto wirklich löschen?", "Konto löschen?", JOptionPane.OK_CANCEL_OPTION);
+        if (choice != JOptionPane.OK_OPTION) {
+            return;
+        }
         if (total > 0) {
             UserControl.control.transferMoney(
                     (BankAccount)comboBoxAccount.getSelectedItem(),

@@ -96,6 +96,12 @@ public class MainScreenMenu extends JMenuBar {
         });
         fileMenu.add(profileItem);
         JMenuItem saveItem = new JMenuItem("Speichern");
+        saveItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Es wurde alles gespeichert.", "Speichern", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         fileMenu.add(saveItem);
         return fileMenu;
     }
