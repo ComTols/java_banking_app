@@ -15,7 +15,7 @@ import java.awt.event.ItemListener;
 import java.text.DecimalFormat;
 
 public class MainScreen extends JFrame {
-    private JPanel panelMain;
+    public JPanel panelMain;
     private JComboBox comboBoxAccount;
     private JTable table1;
     private JScrollPane scrollPane;

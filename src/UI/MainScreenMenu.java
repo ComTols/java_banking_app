@@ -140,13 +140,26 @@ public class MainScreenMenu extends JMenuBar {
     private JMenu createAdminMenu() {
         JMenu adminMenu = new JMenu("Admin");
 
-        JMenuItem reportItem = new JMenuItem("Report");
+        JMenuItem reportItem = new JMenuItem("Dashboard");
+        reportItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UserControl.control.showAdmin();
+            }
+        });
+        JMenuItem backItem = new JMenuItem("Zurück");
+        backItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                UserControl.control.hideAdmin();
+            }
+        });
+        backItem.setVisible(false);
         JMenuItem allowAccountItem = new JMenuItem("Konten freigeben");
-        JMenuItem editAccountItem = new JMenuItem("Konten bearbeiten");
 
         adminMenu.add(reportItem);
+        adminMenu.add(backItem);
         adminMenu.add(allowAccountItem);
-        adminMenu.add(editAccountItem);
 
         adminMenu.setVisible(false);
 

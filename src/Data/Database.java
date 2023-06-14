@@ -51,7 +51,7 @@ public class Database {
     public Person checkPerson(String forename, String lastname, char[] password) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT 'password', role, main_account FROM user WHERE forename = ? AND lastname = ?"
+                    "SELECT 'password', role, main_account, is_admin FROM user WHERE forename = ? AND lastname = ?"
             );
             statement.setString(1, forename);
             statement.setString(2, lastname);
@@ -60,6 +60,7 @@ public class Database {
                 if (new String(password).equals(result.getString("password"))) {
                     Person p = new Person(forename, lastname, result.getString("role"));
                     p.mainAccountName = result.getString("main_account");
+                    p.isAdmin = result.getBoolean("is_admin");
                     return p;
                 }
             }
@@ -591,5 +592,35 @@ public class Database {
             }
         }
         return p;
+    }
+
+    public Person[] getRelatedUsers(Person p) {
+        ArrayList<Person> pers = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM " +
+                            "admin_rel as a, user as u " +
+                            "WHERE " +
+                            "a.customer_forename=u.forename AND " +
+                            "a.customer_lastname = u.lastname AND " +
+                            "a.admin_forename = ? AND " +
+                            "a.admin_lastname = ?;"
+            );
+            statement.setString(1, p.forename);
+            statement.setString(2, p.lastname);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                Person tmp = new Person(
+                        result.getString("forename"),
+                        result.getString("lastname"),
+                        result.getString("role")
+                );
+                tmp.mainAccountName = result.getString("main_account");
+                pers.add(tmp);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pers.toArray(new Person[]{});
     }
 }

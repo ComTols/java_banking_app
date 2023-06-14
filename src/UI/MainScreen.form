@@ -5,7 +5,9 @@
     <constraints>
       <xy x="20" y="20" width="749" height="400"/>
     </constraints>
-    <properties/>
+    <properties>
+      <enabled value="true"/>
+    </properties>
     <border type="none"/>
     <children>
       <component id="fcc1e" class="javax.swing.JComboBox" binding="comboBoxAccount">

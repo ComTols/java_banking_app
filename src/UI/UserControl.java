@@ -48,6 +48,10 @@ public class UserControl {
         ui.getJMenuBar().getMenu(0).getMenuComponent(0).setVisible(false);
         ui.getJMenuBar().getMenu(0).getMenuComponent(1).setVisible(true);
 
+        if (user.isAdmin) {
+            enableAdminMode();
+        }
+
         ui.refreshBankAccounts();
     }
 
@@ -70,6 +74,8 @@ public class UserControl {
 
         ui.getJMenuBar().getMenu(0).getMenuComponent(0).setVisible(true);
         ui.getJMenuBar().getMenu(0).getMenuComponent(1).setVisible(false);
+
+        disableAdminMode();
     }
 
     public void addFriend(String forename, String lastname) {
@@ -168,12 +174,27 @@ public class UserControl {
         return b.name.equals(activeAccount.name);
     }
 
-    private void enableAdminMode() {
+    public void enableAdminMode() {
         ui.getJMenuBar().getMenu(3).setVisible(true);
     }
 
     private void disableAdminMode() {
         ui.getJMenuBar().getMenu(3).setVisible(false);
+    }
+
+    public void showAdmin() {
+        AdminDashboard admin = new AdminDashboard();
+        ui.panelMain.setVisible(false);
+        ui.setContentPane(admin.getContentPane());
+        ui.getJMenuBar().getMenu(3).getItem(0).setVisible(false);
+        ui.getJMenuBar().getMenu(3).getItem(1).setVisible(true);
+    }
+
+    public void hideAdmin() {
+        ui.panelMain.setVisible(true);
+        ui.setContentPane(ui.panelMain);
+        ui.getJMenuBar().getMenu(3).getItem(0).setVisible(true);
+        ui.getJMenuBar().getMenu(3).getItem(1).setVisible(false);
     }
 
     private void loadData() {
@@ -320,5 +341,13 @@ public class UserControl {
             }
         }
         return true;
+    }
+
+    public Person[] getRelatedUsers() {
+        if(user == null) {
+            new LoginDialog();
+            return null;
+        }
+        return database.getRelatedUsers(user);
     }
 }

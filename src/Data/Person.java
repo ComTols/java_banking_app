@@ -5,6 +5,7 @@ public class Person {
     public String lastname;
     public String role;
     public String mainAccountName;
+    public boolean isAdmin = false;
 
     public Person(String f, String l, String r) {
         forename = f;
