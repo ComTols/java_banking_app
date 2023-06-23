@@ -136,7 +136,9 @@ public class MainScreen extends JFrame {
                 });
                 totalAccount += t.total;
             }
-        } catch (NullPointerException e) {}
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
 
         DecimalFormat decimalFormat = new DecimalFormat("#,##0.00 €");
 

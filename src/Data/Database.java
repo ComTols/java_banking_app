@@ -215,11 +215,13 @@ public class Database {
 
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM transactions as t, accounts as a" +
-                            "         WHERE" +
-                            "             (a.name = t.from_account) AND" +
-                            "             (t.from_account = ? OR t.to_account = ?)" +
-                            "         ORDER BY time DESC;"
+                    "SELECT * FROM\n" +
+                            "    transactions as t\n" +
+                            "LEFT JOIN accounts as a ON\n" +
+                            "    a.name = t.from_account\n" +
+                            " WHERE\n" +
+                            "     t.from_account = ? OR t.to_account = ?\n" +
+                            "ORDER BY time DESC;"
             );
             statement.setString(1, b.name);
             statement.setString(2, b.name);
@@ -230,7 +232,7 @@ public class Database {
                 from.name = result.getString("from_account");
                 BankAccount to = new BankAccount();
                 to.name = result.getString("to_account");
-                if (from.name.equals(b.name)) {
+                if (from.name != null && from.name.equals(b.name)) {
                     from = b;
                     total = result.getFloat("total") * -1;
                     PreparedStatement statement2 = connection.prepareStatement(
@@ -687,15 +689,23 @@ public class Database {
         ArrayList<BankAccount> list = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM " +
-                            "accounts as c, admin_rel as a " +
-                            "WHERE " +
-                            "a.customer_forename in (c.forename, c.secound_forename) AND " +
-                            "a.customer_lastname in (c.lastname, c.secound_lastname) AND " +
-                            "c.pending = true AND a.admin_forename=? AND a.admin_lastname=? AND c.pending = true;"
+                    "SELECT * FROM accounts\n" +
+                            "WHERE (forename = ? OR secound_forename = ?)\n" +
+                            "    AND (lastname = ? OR secound_lastname = ?)\n" +
+                            "    AND pending = true\n" +
+                            "UNION\n" +
+                            "SELECT c.* FROM accounts AS c\n" +
+                            "INNER JOIN admin_rel AS a\n" +
+                            "    ON (a.customer_forename = c.forename OR a.customer_forename = c.secound_forename)\n" +
+                            "    AND (a.customer_lastname = c.lastname OR a.customer_lastname = c.secound_lastname)\n" +
+                            "WHERE a.admin_forename = ? AND a.admin_lastname = ? AND c.pending = true;\n"
             );
             statement.setString(1, u.forename);
-            statement.setString(2, u.lastname);
+            statement.setString(2, u.forename);
+            statement.setString(3, u.lastname);
+            statement.setString(4, u.lastname);
+            statement.setString(5, u.forename);
+            statement.setString(6, u.lastname);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
                 Person p = new Person(result.getString("forename"), result.getString("lastname"));
@@ -762,7 +772,7 @@ public class Database {
                             "    SELECT customer_forename, customer_lastname FROM admin_rel " +
                             "    UNION " +
                             "    SELECT admin_forename, admin_lastname FROM admin_rel " +
-                            ");"
+                            ") AND role != 'Bänker';"
             );
             ResultSet result = statement.executeQuery();
             while (result.next()) {

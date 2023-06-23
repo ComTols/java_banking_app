@@ -175,7 +175,7 @@ public class UserControl {
     }
 
     public boolean isActiveBankAccount(BankAccount b) {
-        return b.name.equals(activeAccount.name);
+        return b.name != null && b.name.equals(activeAccount.name);
     }
 
     public void enableAdminMode() {
