@@ -151,6 +151,10 @@ public class UserControl {
         return database.getBankAccounts(user);
     }
 
+    public BankAccount[] getBankAccounts(Person p) {
+        return database.getBankAccounts(p);
+    }
+
     public Transaction[] getTransactions() {
         if (activeAccount == null) {
             return null;
@@ -215,6 +219,8 @@ public class UserControl {
                 break;
             case 1:
                 FixedDepositAccount f = new FixedDepositAccount();
+                f.owner = user;
+                // TODO: Zugriffsdatum!
                 b = f;
                 break;
             case 2:
@@ -349,5 +355,32 @@ public class UserControl {
             return null;
         }
         return database.getRelatedUsers(user);
+    }
+
+    public float getBankAccountValue(BankAccount b) {
+        return database.getBankAccountValue(b);
+    }
+
+    public void changeUserForename(String old, Person user) {
+        database.changeUserForename(old, user);
+    }
+    public void changeUserLastname(String old, Person user) {
+        database.changeUserLastname(old, user);
+    }
+    public void changeUser(Person user) {
+        if(user.role.toLowerCase().equals("bänker")) {
+            user.isAdmin = true;
+        } else {
+            user.isAdmin = false;
+        }
+        database.changeUser(user);
+    }
+
+    public BankAccount[] getPendingAccounts() {
+        if(user == null) {
+            new LoginDialog();
+            return null;
+        }
+        return database.getPendingAccounts(user);
     }
 }

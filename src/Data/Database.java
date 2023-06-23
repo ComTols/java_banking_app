@@ -193,7 +193,7 @@ public class Database {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT * FROM accounts WHERE ((forename = ? AND lastname = ?) OR " +
-                            "(secound_forename = ? AND secound_lastname = ?)) AND inactive = false"
+                            "(secound_forename = ? AND secound_lastname = ?)) AND inactive = false AND pending = false"
             );
             statement.setString(1, p.forename);
             statement.setString(2, p.lastname);
@@ -201,47 +201,7 @@ public class Database {
             statement.setString(4, p.lastname);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                switch (result.getString("type")) {
-                    case "normal":
-                        BankAccount b = new BankAccount(p, result.getString("name"));
-                        b.setOverdraftFacility(result.getFloat("overdraftFacility"));
-                        list.add(b);
-                        break;
-                    case "fixed_deposit":
-                        FixedDepositAccount f = new FixedDepositAccount();
-                        f.owner = p;
-                        f.name = result.getString("name");
-                        f.setOverdraftFacility(result.getFloat("overdraftFacility"));
-                        f.accessDate = result.getDate("accessDate");
-                        list.add(f);
-                        break;
-                    case "saving":
-                        SavingAccount s = new SavingAccount();
-                        s.owner = p;
-                        s.name = result.getString("name");
-                        s.setOverdraftFacility(result.getFloat("overdraftFacility"));
-                        s.reference = new BankAccount();
-                        s.reference.name = result.getString("reference");
-                        list.add(s);
-                        break;
-                    case "shared":
-                        SharedAccount sh = new SharedAccount();
-                        sh.owner = p;
-                        sh.name = result.getString("name");
-                        sh.setOverdraftFacility(result.getFloat("overdraftFacility"));
-                        sh.secondOwner = new Person(result.getString("secound_forename"), result.getString("secound_lastname"));
-                        list.add(sh);
-                        break;
-                    case "credit":
-                        CreditAccount c = new CreditAccount();
-                        c.name = result.getString("name");
-                        c.referenceAccount = new BankAccount();
-                        c.referenceAccount.name = result.getString("reference");
-                        c.owner = p;
-                        c.setOverdraftFacility(result.getFloat("overdraftFacility"));
-                        list.add(c);
-                        break;
-                }
+                bankAccountFromResponse(list, result, p);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -622,5 +582,173 @@ public class Database {
             e.printStackTrace();
         }
         return pers.toArray(new Person[]{});
+    }
+
+    public float getBankAccountValue(BankAccount b) {
+        float minus = 0f;
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT SUM(total) as minus FROM " +
+                            "transactions " +
+                            "WHERE " +
+                            "from_account = ?;"
+            );
+            statement.setString(1, b.name);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                minus = result.getFloat("minus");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        float plus = 0f;
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT SUM(total) as plus FROM " +
+                            "transactions " +
+                            "WHERE " +
+                            "to_account = ?;"
+            );
+            statement.setString(1, b.name);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                plus = result.getFloat("plus");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return plus - minus;
+    }
+
+    public void changeUserForename(String old, Person user) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE user " +
+                            "SET forename = ? " +
+                            "WHERE " +
+                            "forename = ? AND lastname = ?;"
+            );
+            statement.setString(1, user.forename);
+            statement.setString(2, old);
+            statement.setString(3, user.lastname);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void changeUserLastname(String old, Person user) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE user " +
+                            "SET lastname = ? " +
+                            "WHERE " +
+                            "forename = ? AND lastname = ?;"
+            );
+            statement.setString(1, user.lastname);
+            statement.setString(2, user.forename);
+            statement.setString(3, old);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void changeUser(Person user) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE user " +
+                            "SET role = ?, is_admin = ?" +
+                            "WHERE " +
+                            "forename = ? AND lastname = ?;"
+            );
+            statement.setString(1, user.role);
+            statement.setBoolean(2, user.isAdmin);
+            statement.setString(3, user.forename);
+            statement.setString(4, user.lastname);
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted != 1) {
+                System.out.println(rowsInserted);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public BankAccount[] getPendingAccounts(Person u) {
+        ArrayList<BankAccount> list = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM " +
+                            "accounts as c, admin_rel as a " +
+                            "WHERE " +
+                            "a.customer_forename in (c.forename, c.secound_forename) AND " +
+                            "a.customer_lastname in (c.lastname, c.secound_lastname) AND " +
+                            "c.pending = true AND a.admin_forename=? AND a.admin_lastname=? AND c.pending = true;"
+            );
+            statement.setString(1, u.forename);
+            statement.setString(2, u.lastname);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                Person p = new Person(result.getString("forename"), result.getString("lastname"));
+                bankAccountFromResponse(list, result, p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list.toArray(new BankAccount[]{});
+    }
+
+    private void bankAccountFromResponse(ArrayList<BankAccount> list, ResultSet result, Person p) throws SQLException {
+        switch (result.getString("type")) {
+            case "normal":
+                BankAccount b = new BankAccount(p, result.getString("name"));
+                b.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                list.add(b);
+                break;
+            case "fixed_deposit":
+                FixedDepositAccount f = new FixedDepositAccount();
+                f.owner = p;
+                f.name = result.getString("name");
+                f.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                f.accessDate = result.getDate("accessDate");
+                list.add(f);
+                break;
+            case "saving":
+                SavingAccount s = new SavingAccount();
+                s.owner = p;
+                s.name = result.getString("name");
+                s.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                s.reference = new BankAccount();
+                s.reference.name = result.getString("reference");
+                list.add(s);
+                break;
+            case "shared":
+                SharedAccount sh = new SharedAccount();
+                sh.owner = p;
+                sh.name = result.getString("name");
+                sh.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                sh.secondOwner = new Person(result.getString("secound_forename"), result.getString("secound_lastname"));
+                list.add(sh);
+                break;
+            case "credit":
+                CreditAccount c = new CreditAccount();
+                c.name = result.getString("name");
+                c.referenceAccount = new BankAccount();
+                c.referenceAccount.name = result.getString("reference");
+                c.owner = p;
+                c.setOverdraftFacility(result.getFloat("overdraftFacility"));
+                list.add(c);
+                break;
+        }
     }
 }

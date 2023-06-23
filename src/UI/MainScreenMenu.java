@@ -156,10 +156,18 @@ public class MainScreenMenu extends JMenuBar {
         });
         backItem.setVisible(false);
         JMenuItem allowAccountItem = new JMenuItem("Konten freigeben");
+        allowAccountItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new ReleaseAccountDialog();
+            }
+        });
+        JMenuItem unassignedCustomersItem = new JMenuItem("Nicht zugewiesene Kunden");
 
         adminMenu.add(reportItem);
         adminMenu.add(backItem);
         adminMenu.add(allowAccountItem);
+        adminMenu.add(unassignedCustomersItem);
 
         adminMenu.setVisible(false);
 
