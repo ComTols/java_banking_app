@@ -751,4 +751,48 @@ public class Database {
                 break;
         }
     }
+
+    public Person[] getNotCaredCustomers() {
+        ArrayList<Person> list = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * " +
+                            "FROM user " +
+                            "WHERE (forename, lastname) NOT IN ( " +
+                            "    SELECT customer_forename, customer_lastname FROM admin_rel " +
+                            "    UNION " +
+                            "    SELECT admin_forename, admin_lastname FROM admin_rel " +
+                            ");"
+            );
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                Person p = new Person(
+                        result.getString("forename"),
+                        result.getString("lastname"),
+                        result.getString("role")
+                );
+                list.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list.toArray(new Person[]{});
+    }
+
+    public void careForCustomer(Person m, Person c) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO admin_rel (admin_forename, admin_lastname, customer_forename, customer_lastname) " +
+                            "VALUES (?,?,?,?);"
+            );
+            statement.setString(1, m.forename);
+            statement.setString(2, m.lastname);
+            statement.setString(3, c.forename);
+            statement.setString(4, c.lastname);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

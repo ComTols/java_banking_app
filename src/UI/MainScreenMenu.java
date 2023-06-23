@@ -163,6 +163,12 @@ public class MainScreenMenu extends JMenuBar {
             }
         });
         JMenuItem unassignedCustomersItem = new JMenuItem("Nicht zugewiesene Kunden");
+        unassignedCustomersItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new NotCaredCustomersDialog();
+            }
+        });
 
         adminMenu.add(reportItem);
         adminMenu.add(backItem);

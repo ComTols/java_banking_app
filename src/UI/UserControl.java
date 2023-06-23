@@ -383,4 +383,16 @@ public class UserControl {
         }
         return database.getPendingAccounts(user);
     }
+
+    public Person[] getNotCaredCustomers() {
+        return database.getNotCaredCustomers();
+    }
+
+    public void careForCustomer(Person c) {
+        if(user == null) {
+            new LoginDialog();
+            return;
+        }
+        database.careForCustomer(user, c);
+    }
 }
