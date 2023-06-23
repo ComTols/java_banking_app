@@ -18,7 +18,7 @@ public class ShowContacts extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         setTitle("Kontakte");
-        setIconImage(new ImageIcon("src/assets/net.png").getImage());
+        Program.setIcon(this, "net");
 
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

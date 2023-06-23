@@ -25,7 +25,7 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         setTitle("Geld anfordern");
-        setIconImage(new ImageIcon("src/assets/handout.png").getImage());
+        Program.setIcon(this, "handout");
 
 
         btnAdd.addActionListener(new ActionListener() {

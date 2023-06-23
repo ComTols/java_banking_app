@@ -30,7 +30,6 @@ public class AmountTableCellRenderer extends DefaultTableCellRenderer {
                 }
                 setText(value.toString());
             } catch (ClassCastException e) {
-                System.out.println(value);
             }
 
         } else {

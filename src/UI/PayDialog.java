@@ -22,7 +22,7 @@ public class PayDialog extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setIconImage(new ImageIcon("src/assets/wallet.png").getImage());
+        Program.setIcon(this, "wallet");
         setTitle("Ausstehende Anfragen");
 
         for (BankAccount b : UserControl.control.getBankAccounts()) {

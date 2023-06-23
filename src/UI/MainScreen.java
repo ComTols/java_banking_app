@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.net.URL;
 import java.text.DecimalFormat;
 
 public class MainScreen extends JFrame {
@@ -152,7 +153,7 @@ public class MainScreen extends JFrame {
         setSize(400, 350);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setTitle("Bank");
-        setIconImage(new ImageIcon("src/assets/money-coins.png").getImage());
+        Program.setIcon(this, "money-coins");
         setLocationByPlatform(true);
         setVisible(true);
         new LoginDialog();

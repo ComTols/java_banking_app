@@ -24,8 +24,7 @@ public class TransferDialog extends JDialog implements ISelectReceiver {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         setTitle("Überweisung");
-        setIconImage(new ImageIcon("src/assets/payment.png").getImage());
-
+        Program.setIcon(this, "payment");
 
         btnAdd.addActionListener(new ActionListener() {
             @Override

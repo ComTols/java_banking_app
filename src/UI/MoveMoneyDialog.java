@@ -19,7 +19,7 @@ public class MoveMoneyDialog extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setIconImage(new ImageIcon("src/assets/gold.png").getImage());
+        Program.setIcon(this, "gold");
         setTitle("Geld verschieben");
 
         for (BankAccount b : UserControl.control.getBankAccounts()) {

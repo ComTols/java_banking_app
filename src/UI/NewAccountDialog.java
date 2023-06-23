@@ -29,8 +29,7 @@ public class NewAccountDialog extends JDialog {
         getRootPane().setDefaultButton(buttonOK);
         setSize(200, -1);
         setTitle("Konto erstellen");
-        setIconImage(new ImageIcon("src/assets/money-bag.png").getImage());
-
+        Program.setIcon(this, "money-bag");
 
 
         buttonOK.addActionListener(new ActionListener() {

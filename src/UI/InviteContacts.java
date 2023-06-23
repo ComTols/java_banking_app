@@ -20,7 +20,7 @@ InviteContacts extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         setTitle("Kontakte anzeigen");
-        setIconImage(new ImageIcon("src/assets/contacts.png").getImage());
+        Program.setIcon(this, "contacts");
 
 
         buttonOK.addActionListener(new ActionListener() {

@@ -17,7 +17,7 @@ public class ShowRequests extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setIconImage(new ImageIcon("src/assets/businessman.png").getImage());
+        Program.setIcon(this, "businessman");
         setTitle("Ausstehende Anfragen");
 
 

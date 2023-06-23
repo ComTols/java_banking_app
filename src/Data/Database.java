@@ -13,13 +13,9 @@ public class Database {
     private Connection connection;
 
     public void connect() {
-        System.out.println("Lade Fahrer...");
-
         try {
             Class.forName("org.mariadb.jdbc.Driver");
-            System.out.println("Driver loaded!");
         } catch (ClassNotFoundException e) {
-            System.out.println("Konnte den Treiber nicht finden. Noooooob!");
             System.exit(100);
         }
 
@@ -28,14 +24,10 @@ public class Database {
         String username = "java_sys";
         String password = "java_system_user";
 
-        System.out.println("Verbinde Datenbank...");
-
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Database connected!");
             this.connection = connection;
         } catch (SQLException e) {
-            System.out.println("Konnte keine Verbindung zur Datenbank herstellen. Denk noch mal drüber nach!");
             System.exit(101);
         }
 

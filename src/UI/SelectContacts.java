@@ -24,7 +24,7 @@ public class SelectContacts extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setIconImage(new ImageIcon("src/assets/contacts.png").getImage());
+        Program.setIcon(this, "contacts");
         setTitle("Kontakte auswählen");
 
 

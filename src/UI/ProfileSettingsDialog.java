@@ -18,7 +18,7 @@ public class ProfileSettingsDialog extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setIconImage(new ImageIcon("src/assets/sign.png").getImage());
+        Program.setIcon(this, "sign");
         setTitle("Profileinstellungen");
 
         textFieldForename.setText(UserControl.control.getUser().forename);

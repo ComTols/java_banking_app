@@ -16,7 +16,7 @@ public class LoginDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         setTitle("Anmelden");
-        setIconImage(new ImageIcon("src/assets/business-contact-male.png").getImage());
+        Program.setIcon(this, "business-contact-male");
         setResizable(false);
 
         buttonOK.addActionListener(new ActionListener() {

@@ -19,7 +19,7 @@ public class ReleaseAccountDialog extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setIconImage(new ImageIcon("src/assets/law.png").getImage());
+        Program.setIcon(this, "law");
         setTitle("Konten freigeben");
 
         buttonOK.addActionListener(new ActionListener() {
