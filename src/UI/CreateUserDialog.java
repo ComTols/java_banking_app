@@ -30,8 +30,8 @@ public class CreateUserDialog extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setTitle("Kontakte anzeigen");
-        Program.setIcon(this, "contacts");
+        setTitle("Neuer Benutzer");
+        Program.setIcon(this, "hat");
 
         buttonOK.addActionListener(e -> onOK());
 

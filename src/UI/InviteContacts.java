@@ -19,7 +19,7 @@ InviteContacts extends JDialog {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        setTitle("Kontakte anzeigen");
+        setTitle("Freunde einladen");
         Program.setIcon(this, "contacts");
 
 

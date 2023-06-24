@@ -23,7 +23,7 @@ public class PayDialog extends JDialog {
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
         Program.setIcon(this, "wallet");
-        setTitle("Ausstehende Anfragen");
+        setTitle("Ausstehende Rechnungen");
 
         for (BankAccount b : UserControl.control.getBankAccounts()) {
             comboBox1.addItem(b);
