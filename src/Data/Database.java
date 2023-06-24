@@ -3,10 +3,7 @@ import CustomExceptions.DuplicateKeyException;
 import UI.UserControl;
 
 import java.sql.*;
-import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Database {
 
@@ -25,8 +22,7 @@ public class Database {
         String password = "java_system_user";
 
         try {
-            Connection connection = DriverManager.getConnection(url, username, password);
-            this.connection = connection;
+            this.connection = DriverManager.getConnection(url, username, password);
         } catch (SQLException e) {
             System.exit(101);
         }
@@ -36,7 +32,7 @@ public class Database {
     public void finish() {
         try {
             connection.close();
-        } catch (SQLException e) {
+        } catch (SQLException ignored) {
         }
     }
 
@@ -63,7 +59,7 @@ public class Database {
     }
 
     public Person[] getAvailableFriends(Person p) {
-        ArrayList<Person> list = new ArrayList<Person>();
+        ArrayList<Person> list = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT * FROM user WHERE lastname != ? AND forename != ?"
@@ -112,7 +108,7 @@ public class Database {
     }
 
     public Person[] getPendingRequests(Person p) {
-        ArrayList<Person> list = new ArrayList<Person>();
+        ArrayList<Person> list = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT * FROM contacts WHERE secound_lastname = ? AND second_forename = ? AND pending = 1"
@@ -130,14 +126,14 @@ public class Database {
 
     private void handleContactsResponse(Person p, ArrayList<Person> list, ResultSet result) throws SQLException {
         while (result.next()) {
-            String forename = "";
+            String forename;
             if (p.forename.equals(result.getString("first_forename"))) {
                 forename = result.getString("second_forename");
             } else {
                 forename = result.getString("first_forename");
             }
 
-            String lastname = "";
+            String lastname;
             if (p.lastname.equals(result.getString("first_lastname"))) {
                 lastname = result.getString("secound_lastname");
             } else {
@@ -161,7 +157,7 @@ public class Database {
     }
 
     public Person[] getContacts(Person p) {
-        ArrayList<Person> list = new ArrayList<Person>();
+        ArrayList<Person> list = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT * FROM contacts WHERE ((first_lastname = ? AND first_forename = ?) OR (secound_lastname = ? AND second_forename = ?)) AND pending = 0"
@@ -207,19 +203,19 @@ public class Database {
 
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM\n" +
-                            "    transactions as t\n" +
-                            "LEFT JOIN accounts as a ON\n" +
-                            "    a.name = t.from_account\n" +
-                            " WHERE\n" +
-                            "     t.from_account = ? OR t.to_account = ?\n" +
+                    "SELECT * FROM " +
+                            "    transactions as t " +
+                            "LEFT JOIN accounts as a ON " +
+                            "    a.name = t.from_account " +
+                            " WHERE " +
+                            "     t.from_account = ? OR t.to_account = ? " +
                             "ORDER BY time DESC;"
             );
             statement.setString(1, b.name);
             statement.setString(2, b.name);
             ResultSet result = statement.executeQuery();
             while (result.next()) {
-                float total = 0.0f;
+                float total;
                 BankAccount from = new BankAccount();
                 from.name = result.getString("from_account");
                 BankAccount to = new BankAccount();
@@ -266,7 +262,7 @@ public class Database {
             values[7] = ((CreditAccount) b).referenceAccount.name;
             values[8] = "credit";
         } else if (b instanceof FixedDepositAccount) {
-
+            // TODO: Datenbank Eintrag erstellen
         } else if (b instanceof SavingAccount) {
             values[3] = "0";
             values[7] = ((SavingAccount) b).reference.name;
@@ -284,12 +280,12 @@ public class Database {
             );
             for (int i = 0; i < values.length; i++) {
                 if (i == 3) {
-                    statement.setFloat(i + 1, Float.valueOf(values[i]));
+                    statement.setFloat(i + 1, Float.parseFloat(values[i]));
                 } else {
                     statement.setString(i + 1, values[i]);
                 }
             }
-            int rowsInserted = 0;
+            int rowsInserted;
             try {
                 rowsInserted = statement.executeUpdate();
             } catch (SQLException e) {
@@ -681,16 +677,17 @@ public class Database {
         ArrayList<BankAccount> list = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM accounts\n" +
-                            "WHERE (forename = ? OR secound_forename = ?)\n" +
-                            "    AND (lastname = ? OR secound_lastname = ?)\n" +
-                            "    AND pending = true\n" +
-                            "UNION\n" +
-                            "SELECT c.* FROM accounts AS c\n" +
-                            "INNER JOIN admin_rel AS a\n" +
-                            "    ON (a.customer_forename = c.forename OR a.customer_forename = c.secound_forename)\n" +
-                            "    AND (a.customer_lastname = c.lastname OR a.customer_lastname = c.secound_lastname)\n" +
-                            "WHERE a.admin_forename = ? AND a.admin_lastname = ? AND c.pending = true;\n"
+                    """
+                            SELECT * FROM accounts WHERE (forename = ? OR secound_forename = ?)
+                                AND (lastname = ? OR secound_lastname = ?)
+                                AND pending = true
+                            UNION
+                            SELECT c.* FROM accounts AS c
+                            INNER JOIN admin_rel AS a
+                                ON (a.customer_forename = c.forename OR a.customer_forename = c.secound_forename)
+                                AND (a.customer_lastname = c.lastname OR a.customer_lastname = c.secound_lastname)
+                            WHERE a.admin_forename = ? AND a.admin_lastname = ? AND c.pending = true;
+                            """
             );
             statement.setString(1, u.forename);
             statement.setString(2, u.forename);
@@ -712,20 +709,20 @@ public class Database {
 
     private void bankAccountFromResponse(ArrayList<BankAccount> list, ResultSet result, Person p) throws SQLException {
         switch (result.getString("type")) {
-            case "normal":
+            case "normal" -> {
                 BankAccount b = new BankAccount(p, result.getString("name"));
                 b.setOverdraftFacility(result.getFloat("overdraftFacility"));
                 list.add(b);
-                break;
-            case "fixed_deposit":
+            }
+            case "fixed_deposit" -> {
                 FixedDepositAccount f = new FixedDepositAccount();
                 f.owner = p;
                 f.name = result.getString("name");
                 f.setOverdraftFacility(result.getFloat("overdraftFacility"));
                 f.accessDate = result.getDate("accessDate");
                 list.add(f);
-                break;
-            case "saving":
+            }
+            case "saving" -> {
                 SavingAccount s = new SavingAccount();
                 s.owner = p;
                 s.name = result.getString("name");
@@ -733,16 +730,16 @@ public class Database {
                 s.reference = new BankAccount();
                 s.reference.name = result.getString("reference");
                 list.add(s);
-                break;
-            case "shared":
+            }
+            case "shared" -> {
                 SharedAccount sh = new SharedAccount();
                 sh.owner = p;
                 sh.name = result.getString("name");
                 sh.setOverdraftFacility(result.getFloat("overdraftFacility"));
                 sh.secondOwner = new Person(result.getString("secound_forename"), result.getString("secound_lastname"));
                 list.add(sh);
-                break;
-            case "credit":
+            }
+            case "credit" -> {
                 CreditAccount c = new CreditAccount();
                 c.name = result.getString("name");
                 c.referenceAccount = new BankAccount();
@@ -750,7 +747,7 @@ public class Database {
                 c.owner = p;
                 c.setOverdraftFacility(result.getFloat("overdraftFacility"));
                 list.add(c);
-                break;
+            }
         }
     }
 
@@ -796,5 +793,35 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public String createUser(Person u) {
+        String pw = PasswordGenerator.generatePassword();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO user (forename, lastname, password, main_account) " +
+                            "VALUES (?,?,?,?);"
+            );
+            statement.setString(1, u.forename);
+            statement.setString(2, u.lastname);
+            statement.setString(3, pw);
+            statement.setString(4, "Super Konto " + u.forename);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                        "INSERT INTO java_banking.accounts (`name`, forename, lastname, overdraftFacility, pending) " +
+                            "VALUES (?,?,?,50, false);"
+            );
+            statement.setString(1, "Super Konto " + u.forename);
+            statement.setString(2, u.forename);
+            statement.setString(3, u.lastname);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return pw;
     }
 }

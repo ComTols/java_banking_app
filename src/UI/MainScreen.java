@@ -8,18 +8,14 @@ import Data.Transaction;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.net.URL;
 import java.text.DecimalFormat;
 
 public class MainScreen extends JFrame {
     public JPanel panelMain;
     private JComboBox comboBoxAccount;
     private JTable table1;
-    private JScrollPane scrollPane;
     private JButton btnAccountinfo;
     private JLabel labelTotal;
     private JButton btnDelete;
@@ -37,27 +33,13 @@ public class MainScreen extends JFrame {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 UserControl.control.setActiveAccount((BankAccount) comboBoxAccount.getSelectedItem());
-                if (UserControl.control.getActiveAccount() instanceof CreditAccount) {
-                    btnBalance.setEnabled(true);
-                } else {
-                    btnBalance.setEnabled(false);
-                }
+                btnBalance.setEnabled(UserControl.control.getActiveAccount() instanceof CreditAccount);
                 refreshTransactions();
             }
         });
 
-        btnAccountinfo.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                showBankAccountInfos();
-            }
-        });
-        btnDelete.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                deleteAccount();
-            }
-        });
+        btnAccountinfo.addActionListener(e -> showBankAccountInfos());
+        btnDelete.addActionListener(e -> deleteAccount());
     }
 
     private void deleteAccount() {
@@ -104,12 +86,8 @@ public class MainScreen extends JFrame {
                 }
                 comboBoxAccount.addItem(b);
             }
-        } catch (NullPointerException e) {}
-        if (UserControl.control.getActiveAccount() instanceof CreditAccount) {
-            btnBalance.setEnabled(true);
-        } else {
-            btnBalance.setEnabled(false);
-        }
+        } catch (NullPointerException ignored) {}
+        btnBalance.setEnabled(UserControl.control.getActiveAccount() instanceof CreditAccount);
         refreshTransactions();
     }
 
@@ -123,7 +101,7 @@ public class MainScreen extends JFrame {
         }
         try {
             for (Transaction t : UserControl.control.getTransactions()) {
-                String sender = "";
+                String sender;
                 if (UserControl.control.isActiveBankAccount(t.from)) {
                     sender = t.to.owner.toString();
                 } else {
@@ -138,7 +116,7 @@ public class MainScreen extends JFrame {
                 totalAccount += t.total;
             }
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("#,##0.00 €");

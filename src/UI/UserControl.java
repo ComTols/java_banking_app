@@ -16,7 +16,6 @@ public class UserControl {
 
     private Person user = null;
     private char[] password = null;
-    private boolean loggedIn = false;
     public MainScreen ui = null;
     private Database database;
 
@@ -44,7 +43,6 @@ public class UserControl {
             throw new Exception("Anmeldung fehlgeschlagen.");
         }
 
-        loggedIn = true;
         ui.getJMenuBar().getMenu(0).getMenuComponent(0).setVisible(false);
         ui.getJMenuBar().getMenu(0).getMenuComponent(1).setVisible(true);
 
@@ -58,13 +56,12 @@ public class UserControl {
     public void reloadUser() {
         try {
             login(user.forename, user.lastname, password);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }
 
     public void logout() {
-        loggedIn = false;
         user = null;
         password = null;
 
@@ -213,17 +210,17 @@ public class UserControl {
         }
         BankAccount b = null;
         switch (accountType) {
-            case 0:
+            case 0 -> {
                 b = new BankAccount(user, text);
                 b.setOverdraftFacility(dispo);
-                break;
-            case 1:
+            }
+            case 1 -> {
                 FixedDepositAccount f = new FixedDepositAccount();
                 f.owner = user;
                 // TODO: Zugriffsdatum!
                 b = f;
-                break;
-            case 2:
+            }
+            case 2 -> {
                 CreditAccount c = new CreditAccount();
                 c.owner = user;
                 c.name = text;
@@ -231,37 +228,33 @@ public class UserControl {
                 c.referenceAccount = new BankAccount();
                 c.referenceAccount.name = JOptionPane.showInputDialog(ui, "Bitte geben Sie den Namen des Referenzkontos an.", "Referenzkonto", JOptionPane.QUESTION_MESSAGE);
                 b = c;
-                break;
-            case 3:
+            }
+            case 3 -> {
                 SavingAccount s = new SavingAccount();
                 s.owner = user;
                 s.name = text;
                 s.setOverdraftFacility(dispo);
-
                 JComboBox availableReferences = new JComboBox();
                 for (BankAccount r : UserControl.control.getBankAccounts()) {
                     availableReferences.addItem(r);
                 }
-
                 JOptionPane.showMessageDialog(ui, availableReferences, "Referenzkonto", JOptionPane.QUESTION_MESSAGE);
                 s.reference = (BankAccount) availableReferences.getSelectedItem();
-                b= s;
-                break;
-            case 4:
+                b = s;
+            }
+            case 4 -> {
                 SharedAccount sh = new SharedAccount();
                 sh.name = text;
                 sh.owner = user;
                 sh.setOverdraftFacility(dispo);
-
                 JComboBox availableOwner = new JComboBox();
                 for (Person r : UserControl.control.getContacts()) {
                     availableOwner.addItem(r);
                 }
-
                 JOptionPane.showMessageDialog(ui, availableOwner, "Referenzkonto", JOptionPane.QUESTION_MESSAGE);
                 sh.secondOwner = (Person) availableOwner.getSelectedItem();
                 b = sh;
-                break;
+            }
         }
         try {
             database.createNewBankAccount(b);
@@ -368,11 +361,7 @@ public class UserControl {
         database.changeUserLastname(old, user);
     }
     public void changeUser(Person user) {
-        if(user.role.toLowerCase().equals("bänker")) {
-            user.isAdmin = true;
-        } else {
-            user.isAdmin = false;
-        }
+        user.isAdmin = user.role.equalsIgnoreCase("bänker");
         database.changeUser(user);
     }
 
@@ -394,5 +383,9 @@ public class UserControl {
             return;
         }
         database.careForCustomer(user, c);
+    }
+
+    public String createUser(Person u) {
+        return database.createUser(u);
     }
 }
