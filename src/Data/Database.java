@@ -39,7 +39,7 @@ public class Database {
     public Person checkPerson(String forename, String lastname, char[] password) {
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT 'password', role, main_account, is_admin FROM user WHERE forename = ? AND lastname = ?"
+                    "SELECT * FROM user WHERE forename = ? AND lastname = ?"
             );
             statement.setString(1, forename);
             statement.setString(2, lastname);
@@ -49,6 +49,14 @@ public class Database {
                     Person p = new Person(forename, lastname, result.getString("role"));
                     p.mainAccountName = result.getString("main_account");
                     p.isAdmin = result.getBoolean("is_admin");
+
+                    p.date = new java.util.Date(result.getDate("birthday").getTime());
+                    p.mail = result.getString("mail");
+                    p.street = result.getString("street");
+                    p.no = result.getString("no");
+                    p.postal = result.getString("postal");
+                    p.phone = result.getString("phone");
+
                     return p;
                 }
             }
@@ -799,13 +807,24 @@ public class Database {
         String pw = PasswordGenerator.generatePassword();
         try {
             PreparedStatement statement = connection.prepareStatement(
-                    "INSERT INTO user (forename, lastname, password, main_account) " +
-                            "VALUES (?,?,?,?);"
+                    """
+                        INSERT INTO user (
+                            forename, lastname, password, main_account,
+                            birthday, mail, street, no, postal, phone
+                        )
+                        VALUES (?,?,?,?,?,?,?,?,?,?);"""
             );
             statement.setString(1, u.forename);
             statement.setString(2, u.lastname);
             statement.setString(3, pw);
             statement.setString(4, "Super Konto " + u.forename);
+
+            statement.setDate(5, new Date(u.date.getTime()));
+            statement.setString(6, u.mail);
+            statement.setString(7, u.street);
+            statement.setString(8, u.no);
+            statement.setString(9, u.postal);
+            statement.setString(10, u.phone);
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

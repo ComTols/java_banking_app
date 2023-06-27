@@ -12,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 
-public class CreateUserDialog extends JDialog {
+public class CreateUserDialog extends JDialog implements IParsedBirthdayReceiver {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -48,7 +48,7 @@ public class CreateUserDialog extends JDialog {
         // call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        setDateFormat();
+        setDateFormat(fTxtDate, this);
 
         pack();
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
@@ -72,7 +72,7 @@ public class CreateUserDialog extends JDialog {
             JOptionPane.showMessageDialog(this, "Bitte geben Sie eine Mail ein.", "Mail fehlt", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if (!isValidEmail()) {
+        if (!isValidEmail(txtMail)) {
             JOptionPane.showMessageDialog(this, "Die Mail Adresse ist fehlerhaft.", "Mail falsch", JOptionPane.ERROR_MESSAGE);
             return;
         }
@@ -117,7 +117,7 @@ public class CreateUserDialog extends JDialog {
         dispose();
     }
 
-    private void setDateFormat() {
+    public static void setDateFormat(JFormattedTextField fTxtDate, IParsedBirthdayReceiver receiver) {
         MaskFormatter maskFormatter;
         try {
             maskFormatter = new MaskFormatter("##.##.####");
@@ -135,7 +135,7 @@ public class CreateUserDialog extends JDialog {
                     dateFormat.setLenient(false);
 
                     try {
-                        parsedDate = dateFormat.parse(input);
+                        receiver.setParsedDate(dateFormat.parse(input));
 
                         Calendar minDate = Calendar.getInstance();
                         minDate.add(Calendar.YEAR, -150);
@@ -144,7 +144,7 @@ public class CreateUserDialog extends JDialog {
                         maxDate.add(Calendar.DAY_OF_MONTH, 1); // Exclude the current day
 
                         Calendar inputDate = Calendar.getInstance();
-                        inputDate.setTime(parsedDate);
+                        inputDate.setTime(receiver.getParsedDate());
 
                         if (inputDate.before(minDate) || inputDate.after(maxDate)) {
                             JOptionPane.showMessageDialog(UserControl.control.ui, "Das Datum darf nicht in der Zukunft liegen oder mehr als 150 Jahre in der Vergangenheit", "Datum invalide", JOptionPane.ERROR_MESSAGE);
@@ -162,7 +162,7 @@ public class CreateUserDialog extends JDialog {
     }
 
 
-    private boolean isValidEmail() {
+    public static boolean isValidEmail(JTextField txtMail) {
         String email = txtMail.getText();
         String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         Pattern pattern = Pattern.compile(emailRegex);
@@ -171,4 +171,13 @@ public class CreateUserDialog extends JDialog {
     }
 
 
+    @Override
+    public void setParsedDate(Date d) {
+        parsedDate = d;
+    }
+
+    @Override
+    public Date getParsedDate() {
+        return parsedDate;
+    }
 }
