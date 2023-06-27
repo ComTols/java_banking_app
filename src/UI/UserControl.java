@@ -108,6 +108,13 @@ public class UserControl {
     }
 
     public void transferMoney(BankAccount account, Person[] receivers, float total, String purpose) {
+
+        float totalSum = total * receivers.length;
+        if(database.getBankAccountValue(account) - totalSum < account.getOverdraftFacility()) {
+            JOptionPane.showMessageDialog(ui, "Das Konto wäre nach dieser Transaktion zu weit überzogen!", "Dispo überschritten", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         for (Person r : receivers) {
             if (!transactionAllowed(account, r.mainAccountName)) {
                 continue;
@@ -275,6 +282,12 @@ public class UserControl {
         if (!isSystem && !transactionAllowed(f, t)) {
             return;
         }
+
+        if(database.getBankAccountValue(f) - total < f.getOverdraftFacility()) {
+            JOptionPane.showMessageDialog(ui, "Das Konto wäre nach dieser Transaktion zu weit überzogen!", "Dispo überschritten", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
         database.moveMoney(f,t, total, p);
         ui.refreshTransactions();
     }
