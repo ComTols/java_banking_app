@@ -110,7 +110,7 @@ public class UserControl {
     public void transferMoney(BankAccount account, Person[] receivers, float total, String purpose) {
 
         float totalSum = total * receivers.length;
-        if(database.getBankAccountValue(account) - totalSum < account.getOverdraftFacility()) {
+        if(database.getBankAccountValue(account) - totalSum < -account.getOverdraftFacility()) {
             JOptionPane.showMessageDialog(ui, "Das Konto wäre nach dieser Transaktion zu weit überzogen!", "Dispo überschritten", JOptionPane.ERROR_MESSAGE);
             return;
         }
