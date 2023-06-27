@@ -81,7 +81,7 @@ public class ShowRequests extends JDialog {
         model.addColumn("Annehmen");
         model.addColumn("Ablehnen");
 
-        for (Person p : UserControl.control.getPendigRequests()) {
+        for (Person p : UserControl.control.getPendingRequests()) {
             model.addRow(new Object[]{
                     p.forename,
                     p.lastname,
@@ -108,7 +108,7 @@ public class ShowRequests extends JDialog {
                     ((DefaultTableModel)table1.getModel()).removeRow(i);
                 }
                 JOptionPane.showMessageDialog(button, f + " " + l + " wurde als Kontakt angenommen.");
-                for (Person p : UserControl.control.getPendigRequests()) {
+                for (Person p : UserControl.control.getPendingRequests()) {
                     ((DefaultTableModel)table1.getModel()).addRow(new Object[]{
                             p.forename,
                             p.lastname,
@@ -131,7 +131,7 @@ public class ShowRequests extends JDialog {
                     ((DefaultTableModel)table1.getModel()).removeRow(i);
                 }
                 JOptionPane.showMessageDialog(button, f + " " + l + " wurde als Kontakt abgelehnt.");
-                for (Person p : UserControl.control.getPendigRequests()) {
+                for (Person p : UserControl.control.getPendingRequests()) {
                     ((DefaultTableModel)table1.getModel()).addRow(new Object[]{
                             p.forename,
                             p.lastname,

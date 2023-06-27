@@ -77,7 +77,6 @@ public class UserControl {
 
     public void addFriend(String forename, String lastname) {
         if(user == null) {
-            new LoginDialog();
             return;
         }
         database.addPendingFriendship(user, new Person(forename, lastname));
@@ -85,7 +84,6 @@ public class UserControl {
 
     public void removeFriend(String f, String l) {
         if(user == null) {
-            new LoginDialog();
             return;
         }
         database.deleteFriendship(user, new Person(f, l));
@@ -93,7 +91,6 @@ public class UserControl {
 
     public void acceptFriend(String f, String l) {
         if(user == null) {
-            new LoginDialog();
             return;
         }
         database.acceptPendingFriendship(user, new Person(f, l));
@@ -101,7 +98,6 @@ public class UserControl {
 
     public void rejectFriend(String f, String l) {
         if(user == null) {
-            new LoginDialog();
             return;
         }
         database.deleteFriendship(user, new Person(f, l));
@@ -125,15 +121,13 @@ public class UserControl {
 
     public Person[] getAvailableFriends() {
         if (user == null) {
-            new LoginDialog();
             return null;
         }
         return database.getAvailableFriends(user);
     }
 
-    public Person[] getPendigRequests() {
+    public Person[] getPendingRequests() {
         if (user == null) {
-            new LoginDialog();
             return null;
         }
         return database.getPendingRequests(user);
@@ -141,7 +135,6 @@ public class UserControl {
 
     public Person[] getContacts() {
         if (user == null) {
-            new LoginDialog();
             return null;
         }
         return database.getContacts(user);
@@ -149,7 +142,6 @@ public class UserControl {
 
     public BankAccount[] getBankAccounts() {
         if (user == null) {
-            new LoginDialog();
             return null;
         }
         return database.getBankAccounts(user);
@@ -168,7 +160,6 @@ public class UserControl {
 
     public void updateNewMainAccount(BankAccount b) {
         if (user == null) {
-            new LoginDialog();
             return;
         }
         if(b instanceof CreditAccount || b instanceof SavingAccount || b instanceof FixedDepositAccount) {
@@ -213,7 +204,6 @@ public class UserControl {
 
     public void createNewBankAccount(int accountType, float dispo, String text) throws DuplicateKeyException {
         if (user == null) {
-            new LoginDialog();
             return;
         }
         BankAccount b = null;
@@ -295,7 +285,6 @@ public class UserControl {
 
     public PayRequest[] getPayRequests() {
         if (user == null) {
-            new LoginDialog();
             return null;
         }
         return database.getPayRequests(user);
@@ -303,7 +292,6 @@ public class UserControl {
 
     public void pay(PayRequest p, BankAccount from) {
         if (user == null) {
-            new LoginDialog();
             return;
         }
         if (!transactionAllowed(p.from, from)) {
@@ -362,7 +350,6 @@ public class UserControl {
 
     public Person[] getRelatedUsers() {
         if(user == null) {
-            new LoginDialog();
             return null;
         }
         return database.getRelatedUsers(user);
@@ -385,7 +372,6 @@ public class UserControl {
 
     public BankAccount[] getPendingAccounts() {
         if(user == null) {
-            new LoginDialog();
             return null;
         }
         return database.getPendingAccounts(user);
@@ -397,7 +383,6 @@ public class UserControl {
 
     public void careForCustomer(Person c) {
         if(user == null) {
-            new LoginDialog();
             return;
         }
         database.careForCustomer(user, c);
