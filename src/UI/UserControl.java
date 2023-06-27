@@ -188,6 +188,7 @@ public class UserControl {
 
     private void disableAdminMode() {
         ui.getJMenuBar().getMenu(3).setVisible(false);
+        hideAdmin();
     }
 
     public void showAdmin() {
@@ -421,5 +422,13 @@ public class UserControl {
         user.no = u.no;
         user.postal = u.postal;
         user.phone = u.phone;
+    }
+
+    public void updateAccount(BankAccount b, String oldName) throws DuplicateKeyException {
+        database.updateAccount(b, oldName);
+    }
+
+    public void updateAccount(BankAccount b) {
+        database.updateAccount(b);
     }
 }

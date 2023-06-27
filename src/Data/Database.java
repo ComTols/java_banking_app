@@ -882,7 +882,6 @@ public class Database {
     }
 
     public void updateUser(Person u) {
-        String pw = PasswordGenerator.generatePassword();
         try {
             PreparedStatement statement = connection.prepareStatement(
                     """
@@ -904,6 +903,61 @@ public class Database {
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void updateAccount(BankAccount b) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    """
+                        UPDATE accounts
+                        SET
+                            overdraftFacility = ?
+                        WHERE
+                            name = ?;"""
+            );
+            statement.setFloat(1, b.getOverdraftFacility());
+            statement.setString(2, b.name);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void updateAccount(BankAccount b, String oldName) throws DuplicateKeyException {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    """
+                        UPDATE accounts
+                        SET
+                            overdraftFacility = ?, name=?
+                        WHERE
+                            name = ?;"""
+            );
+            statement.setFloat(1, b.getOverdraftFacility());
+            statement.setString(2, b.name);
+            statement.setString(3, oldName);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DuplicateKeyException();
+        }
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    """
+                        UPDATE user
+                        SET
+                            main_account = ?
+                        WHERE
+                            main_account = ?;"""
+            );
+            statement.setString(1, oldName);
+            statement.setString(2, b.name);
+
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DuplicateKeyException();
         }
     }
 }

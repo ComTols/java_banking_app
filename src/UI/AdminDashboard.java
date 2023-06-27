@@ -1,5 +1,6 @@
 package UI;
 
+import CustomExceptions.DuplicateKeyException;
 import Data.BankAccount;
 import Data.Person;
 
@@ -74,6 +75,11 @@ public class AdminDashboard extends JFrame {
                 switch (column) {
                     case 0:
                         accounts[row].name = aValue.toString();
+                        try {
+                            UserControl.control.updateAccount(accounts[row], old.toString());
+                        } catch (DuplicateKeyException e) {
+                            JOptionPane.showMessageDialog(UserControl.control.ui, "Der Kontoname konnte nicht geändert werden. Er ist bereits in Nutzung.", "Name doppelt", JOptionPane.ERROR_MESSAGE);
+                        }
                         break;
                     case 3:
                         float dispo = -1f;
@@ -85,9 +91,9 @@ public class AdminDashboard extends JFrame {
                             break;
                         }
                         accounts[row].setOverdraftFacility(dispo);
+                        UserControl.control.updateAccount(accounts[row]);
                         break;
                 }
-                // TODO: Änderungen zur Datenbank
             }
         };
         modelTableAccounts.addColumn("Konto");
