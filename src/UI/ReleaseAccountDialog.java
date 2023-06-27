@@ -14,6 +14,7 @@ public class ReleaseAccountDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JTable table1;
+    private BankAccount[] pendingAccounts;
 
     public ReleaseAccountDialog() {
         setContentPane(contentPane);
@@ -57,7 +58,46 @@ public class ReleaseAccountDialog extends JDialog {
         model.addColumn("Zulassen");
         model.addColumn("Ablehnen");
 
-        for (BankAccount b : UserControl.control.getPendingAccounts()) {
+        refreshTable(model);
+
+
+        // Erstellen der JTable mit dem TableModel
+        table1 = new JTable(model);
+        table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        // Anpassen der Zeilenhöhe
+        table1.setRowHeight(30);
+
+        table1.getColumnModel().getColumn(4).setCellRenderer(new AmountTableCellRenderer(4));
+
+        table1.getColumnModel().getColumn(8).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
+        table1.getColumnModel().getColumn(8).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
+            @Override
+            public void onClick(ClientsTableRenderer clientsTableRenderer) {
+                UserControl.control.acceptBankAccount(pendingAccounts[row]);
+                refreshTable((DefaultTableModel) table1.getModel());
+            }
+        });
+
+        table1.getColumnModel().getColumn(9).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
+        table1.getColumnModel().getColumn(9).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
+            @Override
+            public void onClick(ClientsTableRenderer clientsTableRenderer) {
+                UserControl.control.rejectBankAccount(pendingAccounts[row]);
+                refreshTable((DefaultTableModel) table1.getModel());
+            }
+        });
+    }
+
+    private void refreshTable(DefaultTableModel model) {
+
+        int rowCount = model.getRowCount();
+        for (int i = rowCount - 1; i >= 0; i--) {
+            model.removeRow(i);
+        }
+
+        pendingAccounts = UserControl.control.getPendingAccounts();
+        for (BankAccount b : pendingAccounts) {
             Object[] row = new Object[] {
                     b.name,
                     b.owner.forename,
@@ -78,30 +118,6 @@ public class ReleaseAccountDialog extends JDialog {
             model.addRow(row);
         }
 
-
-        // Erstellen der JTable mit dem TableModel
-        table1 = new JTable(model);
-        table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-        // Anpassen der Zeilenhöhe
-        table1.setRowHeight(30);
-
-        table1.getColumnModel().getColumn(4).setCellRenderer(new AmountTableCellRenderer(4));
-
-        table1.getColumnModel().getColumn(8).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
-        table1.getColumnModel().getColumn(8).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
-            @Override
-            public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                //TODO: Annehmen
-            }
-        });
-
-        table1.getColumnModel().getColumn(9).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
-        table1.getColumnModel().getColumn(9).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
-            @Override
-            public void onClick(ClientsTableRenderer clientsTableRenderer) {
-                //TODO: Ablehnen
-            }
-        });
+        UserControl.control.ui.refreshBankAccounts();
     }
 }

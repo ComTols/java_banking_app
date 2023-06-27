@@ -824,4 +824,36 @@ public class Database {
         }
         return pw;
     }
+
+    public void acceptBankAccount(BankAccount b) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    """
+                        UPDATE accounts
+                        SET pending = false
+                        WHERE name = ?;
+                    """
+            );
+            statement.setString(1, b.name);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void rejectBankAccount(BankAccount b) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    """
+                        DELETE
+                        FROM accounts
+                        WHERE name = ? AND pending = true;
+                    """
+            );
+            statement.setString(1, b.name);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

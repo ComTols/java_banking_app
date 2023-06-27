@@ -4,7 +4,6 @@ import Data.Person;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -13,7 +12,6 @@ InviteContacts extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JTable table1;
-    private JScrollBar scrollBar1;
 
     public InviteContacts() {
         setContentPane(contentPane);
@@ -23,11 +21,7 @@ InviteContacts extends JDialog {
         Program.setIcon(this, "contacts");
 
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
+        buttonOK.addActionListener(e -> onOK());
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -38,17 +32,9 @@ InviteContacts extends JDialog {
         });
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(e -> onOK(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(e -> onOK(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         pack();
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
@@ -94,7 +80,7 @@ InviteContacts extends JDialog {
         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table1.setRowHeight(30);
 
-        table1.getColumnModel().getColumn(3).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
+        table1.getColumnModel().getColumn(3).setCellRenderer(new ClientsTableButtonRenderer());
         table1.getColumnModel().getColumn(3).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {

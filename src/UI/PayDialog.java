@@ -2,15 +2,12 @@ package UI;
 
 import Data.BankAccount;
 import Data.PayRequest;
-import Data.Person;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
-import java.text.DecimalFormat;
 
 public class PayDialog extends JDialog {
     private JPanel contentPane;
@@ -29,11 +26,7 @@ public class PayDialog extends JDialog {
             comboBox1.addItem(b);
         }
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
+        buttonOK.addActionListener(e -> onOK());
 
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -44,11 +37,7 @@ public class PayDialog extends JDialog {
         });
 
         // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(e -> onOK(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         pack();
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
@@ -90,7 +79,7 @@ public class PayDialog extends JDialog {
         table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table1.setRowHeight(30);
 
-        table1.getColumnModel().getColumn(3).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
+        table1.getColumnModel().getColumn(3).setCellRenderer(new ClientsTableButtonRenderer());
         table1.getColumnModel().getColumn(3).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
@@ -102,7 +91,7 @@ public class PayDialog extends JDialog {
                 }
             }
         });
-        table1.getColumnModel().getColumn(4).setCellRenderer((TableCellRenderer) new ClientsTableButtonRenderer());
+        table1.getColumnModel().getColumn(4).setCellRenderer(new ClientsTableButtonRenderer());
         table1.getColumnModel().getColumn(4).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {

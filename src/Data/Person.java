@@ -31,6 +31,9 @@ public class Person {
 
     @Override
     public String toString() {
+        if (lastname == null && forename == null) {
+            return "Extern";
+        }
         return lastname + ", " + forename;
     }
 }

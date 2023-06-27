@@ -388,4 +388,12 @@ public class UserControl {
     public String createUser(Person u) {
         return database.createUser(u);
     }
+
+    public void acceptBankAccount(BankAccount b) {
+        database.acceptBankAccount(b);
+    }
+
+    public void rejectBankAccount(BankAccount b) {
+        database.rejectBankAccount(b);
+    }
 }
