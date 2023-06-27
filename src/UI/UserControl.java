@@ -400,4 +400,13 @@ public class UserControl {
     public void rejectBankAccount(BankAccount b) {
         database.rejectBankAccount(b);
     }
+    public void updateUser(Person u) {
+        database.updateUser(u);
+        user.date = u.date;
+        user.mail = u.mail;
+        user.street = u.street;
+        user.no = u.no;
+        user.postal = u.postal;
+        user.phone = u.phone;
+    }
 }

@@ -880,4 +880,30 @@ public class Database {
             e.printStackTrace();
         }
     }
+
+    public void updateUser(Person u) {
+        String pw = PasswordGenerator.generatePassword();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    """
+                        UPDATE user
+                        SET 
+                            birthday = ?, mail = ?, street = ?, no = ?, postal = ?, phone = ?
+                        WHERE 
+                        forename = ? AND lastname = ?"""
+            );
+            statement.setDate(1, new Date(u.date.getTime()));
+            statement.setString(2, u.mail);
+            statement.setString(3, u.street);
+            statement.setString(4, u.no);
+            statement.setString(5, u.postal);
+            statement.setString(6, u.phone);
+
+            statement.setString(7, u.forename);
+            statement.setString(8, u.lastname);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

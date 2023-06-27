@@ -119,7 +119,7 @@ public class ProfileSettingsDialog extends JDialog implements IParsedBirthdayRec
 
 
         UserControl.control.updateNewMainAccount((BankAccount) comboBox1.getSelectedItem());
-        //TODO: Update user in Database
+        UserControl.control.updateUser(u);
         dispose();
     }
 
