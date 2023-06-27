@@ -50,7 +50,12 @@ public class Database {
                     p.mainAccountName = result.getString("main_account");
                     p.isAdmin = result.getBoolean("is_admin");
 
-                    p.date = new java.util.Date(result.getDate("birthday").getTime());
+                    java.sql.Date resDate = result.getDate("birthday");
+                    if (resDate != null) {
+                        p.date = new java.util.Date(resDate.getTime());
+                    } else {
+                        p.date = null;
+                    }
                     p.mail = result.getString("mail");
                     p.street = result.getString("street");
                     p.no = result.getString("no");

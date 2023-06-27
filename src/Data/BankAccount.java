@@ -3,6 +3,7 @@ package Data;
 public class BankAccount {
     public Person owner;
     public String name;
+    public float value;
     protected float overdraftFacility;
 
     public BankAccount(Person p, String n) {

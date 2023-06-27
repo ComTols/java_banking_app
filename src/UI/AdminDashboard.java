@@ -16,6 +16,7 @@ public class AdminDashboard extends JFrame {
     private JTable tableAttention;
     private Person[] users;
     private BankAccount[] accounts;
+    private BankAccount[] attentions;
 
     public AdminDashboard() {
         setContentPane(panelMain);
@@ -96,15 +97,35 @@ public class AdminDashboard extends JFrame {
 
         // Zeilen füllen
         users = UserControl.control.getRelatedUsers();
+        ArrayList<BankAccount> a = new ArrayList<>();
         for( Person p : users) {
             modelTableUsers.addRow(new Object[]{
                     p.forename,
                     p.lastname,
                     p.role
             });
+
+            BankAccount[] ac = UserControl.control.getBankAccounts(p);
+            for (BankAccount b : ac) {
+                float value = UserControl.control.getBankAccountValue(b);
+                if (value < 0f) {
+                    b.value = value;
+                    a.add(b);
+                }
+            }
         }
 
-        modelTableAttention.addRow(new Object[] {"Maximilian", "Mustermann", "Konto1", -12.5f, 30f});
+        attentions = a.toArray(new BankAccount[]{});
+
+        for (BankAccount b : attentions) {
+            modelTableAttention.addRow(new Object[] {
+                    b.owner.forename,
+                    b.owner.lastname,
+                    b.name,
+                    b.value,
+                    b.getOverdraftFacility()
+                });
+        }
 
         // Erstellen der JTable mit dem TableModel
         tableUsers = new JTable(modelTableUsers);
