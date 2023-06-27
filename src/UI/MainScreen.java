@@ -16,7 +16,7 @@ public class MainScreen extends JFrame {
     public JPanel panelMain;
     private JComboBox comboBoxAccount;
     private JTable table1;
-    private JButton btnAccountinfo;
+    private JButton btnAccountInfo;
     private JLabel labelTotal;
     private JButton btnDelete;
     private JButton btnBalance;
@@ -38,8 +38,9 @@ public class MainScreen extends JFrame {
             }
         });
 
-        btnAccountinfo.addActionListener(e -> showBankAccountInfos());
+        btnAccountInfo.addActionListener(e -> showBankAccountInfos());
         btnDelete.addActionListener(e -> deleteAccount());
+        btnBalance.addActionListener(e -> balance());
     }
 
     private void deleteAccount() {
@@ -175,5 +176,17 @@ public class MainScreen extends JFrame {
         table1.getColumnModel().getColumn(3).setCellRenderer(renderer);
     }
 
+    private void balance() {
+        if(!(UserControl.control.getActiveAccount() instanceof CreditAccount)) {
+            JOptionPane.showMessageDialog(this, "Nur Kreditkarten können direkt ausgeglichen werden.", "Keine Kreditkarte", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(total >= 0f) {
+            return;
+        }
+        CreditAccount creditAccount = (CreditAccount) UserControl.control.getActiveAccount();
+
+        UserControl.control.moveMoney(creditAccount.referenceAccount, creditAccount,total*-1, "Ausgleichszahlung Kreditkarte", true);
+    }
 
 }

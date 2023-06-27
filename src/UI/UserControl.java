@@ -268,7 +268,11 @@ public class UserControl {
     }
 
     public void moveMoney(BankAccount f, BankAccount t, float total, String p) {
-        if (!transactionAllowed(f, t)) {
+        moveMoney( f,  t,  total,  p, false);
+    }
+
+    public void moveMoney(BankAccount f, BankAccount t, float total, String p, boolean isSystem) {
+        if (!isSystem && !transactionAllowed(f, t)) {
             return;
         }
         database.moveMoney(f,t, total, p);

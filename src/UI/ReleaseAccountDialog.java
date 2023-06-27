@@ -115,6 +115,9 @@ public class ReleaseAccountDialog extends JDialog {
             if(b instanceof SavingAccount) {
                 row[7] = ((SavingAccount) b).reference;
             }
+            if (b instanceof CreditAccount) {
+                row[7] = ((CreditAccount) b).referenceAccount;
+            }
             model.addRow(row);
         }
 
