@@ -9,11 +9,29 @@ import java.awt.event.*;
  * @version v1.0_stable_alpha
  */
 public class LoginDialog extends JDialog {
+    /**
+     * the panel containing the Login Dialog
+     */
     private JPanel contentPane;
+    /**
+     * the OK-Button
+     */
     private JButton buttonOK;
+    /**
+     * The Cancel-Button
+     */
     private JButton buttonCancel;
+    /**
+     * the textfield used for the password
+     */
     private JPasswordField password;
+    /**
+     * the textfield used for the forename
+     */
     private JTextField txtForename;
+    /**
+     * the textfield used for the Lastname
+     */
     private JTextField txtLastname;
 
     public LoginDialog() {
@@ -60,6 +78,9 @@ public class LoginDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * trys to log in the user account that matches the inputs
+     */
     private void onOK() {
         try {
             UserControl.control.login(txtForename.getText(), txtLastname.getText(), password.getPassword());
@@ -70,6 +91,9 @@ public class LoginDialog extends JDialog {
         }
     }
 
+    /**
+     * closes the window
+     */
     private void onCancel() {
         // add your code here if necessary
         dispose();

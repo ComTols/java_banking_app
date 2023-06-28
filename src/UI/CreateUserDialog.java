@@ -18,19 +18,55 @@ import java.util.regex.Pattern;
  * @version v1.0_stable_alpha
  */
 public class CreateUserDialog extends JDialog implements IParsedBirthdayReceiver {
+    /**
+     * panel containing the User Dialog
+     */
     private JPanel contentPane;
+    /**
+     * the OK-Button
+     */
     private JButton buttonOK;
+    /**
+     * The cancel-Button
+     */
     private JButton buttonCancel;
+    /**
+     * the textfield used for the forename
+     */
     private JTextField txtForename;
+    /**
+     * the textfield used for the lastname
+     */
     private JTextField txtLastname;
+    /**
+     * the textfield used for the date
+     */
     private JFormattedTextField fTxtDate;
+    /**
+     * textfield used for the email
+     */
     private JTextField txtMail;
+    /**
+     * the textfield used for the street
+     */
     private JTextField txtStreet;
+    /**
+     * the textfield used for the housenumber
+     */
     private JTextField txtNo;
+    /**
+     * the textfield used for the Postal
+     */
     private JTextField txtPostal;
+    /**
+     * the textfield used for the Phone-number
+     */
     private JTextField txtPhone;
     private Date parsedDate = null;
 
+    /**
+     * Creates a User-Dialog
+     */
     public CreateUserDialog() {
         setContentPane(contentPane);
         setModal(true);
@@ -60,6 +96,9 @@ public class CreateUserDialog extends JDialog implements IParsedBirthdayReceiver
         setVisible(true);
     }
 
+    /**
+     * triggers on click and validates the User-Input
+     */
     private void onOK() {
         if(txtForename.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Bitte geben Sie einen Vornamen ein.", "Vorname fehlt", JOptionPane.ERROR_MESSAGE);
@@ -117,11 +156,19 @@ public class CreateUserDialog extends JDialog implements IParsedBirthdayReceiver
         dispose();
     }
 
+    /**
+     * triggers when cancel button is clicked, closes the window
+     */
     private void onCancel() {
         // add your code here if necessary
         dispose();
     }
 
+    /**
+     * masks the given date in the required format
+     * @param fTxtDate the given date
+     * @param receiver reference to the receiving instance
+     */
     public static void setDateFormat(JFormattedTextField fTxtDate, IParsedBirthdayReceiver receiver) {
         MaskFormatter maskFormatter;
         try {
@@ -132,6 +179,10 @@ public class CreateUserDialog extends JDialog implements IParsedBirthdayReceiver
             fTxtDate.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(maskFormatter));
 
             fTxtDate.addFocusListener(new java.awt.event.FocusAdapter() {
+                /**
+                 * validates the date, it must not be in the future or more than 150 years in the past
+                 * @param evt the focus event that triggers the validation
+                 */
                 @Override
                 public void focusLost(java.awt.event.FocusEvent evt) {
                     String input = fTxtDate.getText();
@@ -166,7 +217,11 @@ public class CreateUserDialog extends JDialog implements IParsedBirthdayReceiver
         }
     }
 
-
+    /**
+     * checks if given email is a valid email
+     * @param txtMail the given email
+     * @return true if email is valid
+     */
     public static boolean isValidEmail(JTextField txtMail) {
         String email = txtMail.getText();
         String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
@@ -175,12 +230,19 @@ public class CreateUserDialog extends JDialog implements IParsedBirthdayReceiver
         return pattern.matcher(email).matches();
     }
 
-
+    /**
+     * sets the parsed ID
+     * @param d the parsed date
+     */
     @Override
     public void setParsedDate(Date d) {
         parsedDate = d;
     }
 
+    /**
+     * gets the parsed date
+     * @return parsed date
+     */
     @Override
     public Date getParsedDate() {
         return parsedDate;

@@ -9,6 +9,8 @@ import javax.swing.*;
  */
 public class MainScreenMenu extends JMenuBar {
 
+
+
     public MainScreenMenu() {
         add(createFileMenu());
         add(createTransferMenu());
@@ -16,6 +18,10 @@ public class MainScreenMenu extends JMenuBar {
         add(createAdminMenu());
     }
 
+    /**
+     * creates a Transfer Menu
+     * @return the created Transfer Menu
+     */
     private JMenu createTransferMenu() {
         JMenu transferMenu = new JMenu("Transfer");
         JMenuItem transactionItem = new JMenuItem("Überweisen");
@@ -33,6 +39,10 @@ public class MainScreenMenu extends JMenuBar {
         return transferMenu;
     }
 
+    /**
+     * creates a File Mennu
+     * @return the created File Menu
+     */
     private JMenu createFileMenu() {
         JMenu fileMenu = new JMenu("Datei");
         JMenuItem loginItem = new JMenuItem("Anmelden");
@@ -59,6 +69,10 @@ public class MainScreenMenu extends JMenuBar {
         return fileMenu;
     }
 
+    /**
+     * creates a contact Menu
+     * @return the created Contact Menu
+     */
     private JMenu createContactMenu() {
         JMenu contactMenu = new JMenu("Kontakte");
 
@@ -75,6 +89,10 @@ public class MainScreenMenu extends JMenuBar {
         return contactMenu;
     }
 
+    /**
+     * creates the Admin Menu
+     * @return the created Admin Menu
+     */
     private JMenu createAdminMenu() {
         JMenu adminMenu = new JMenu("Admin");
 

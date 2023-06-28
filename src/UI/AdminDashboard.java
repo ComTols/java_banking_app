@@ -16,9 +16,21 @@ import java.util.ArrayList;
  * @version v1.0_stable_alpha
  */
 public class AdminDashboard extends JFrame {
+    /**
+     * panel containing the admin content
+     */
     private JPanel panelMain;
+    /**
+     * table containing the Users
+     */
     private JTable tableUsers;
+    /**
+     * table containing the accounts
+     */
     private JTable tableAccounts;
+    /**
+     * table containing the accounts that are in dispo
+     */
     private JTable tableAttention;
     private Person[] users;
     private BankAccount[] accounts;
@@ -28,9 +40,18 @@ public class AdminDashboard extends JFrame {
         setContentPane(panelMain);
     }
 
+    /**
+     * creates the UI-Components and is called before the object (Admin Dashboard) is instantiated
+     */
     private void createUIComponents() {
         // Erstellen der Tabelle
         DefaultTableModel modelTableUsers = new DefaultTableModel() {
+            /**
+             * sets a value in the cell at the given row and column and updates the bank-account
+             * @param aValue the value the cell should contain
+             * @param row the row of the cell that should be changes
+             * @param column the column of the cell that should be changed
+             */
             @Override
             public void setValueAt(Object aValue, int row, int column) {
                 String old = getValueAt(row, column).toString();
@@ -56,6 +77,12 @@ public class AdminDashboard extends JFrame {
         modelTableUsers.addColumn("Rolle");
 
         DefaultTableModel modelTableAttention = new DefaultTableModel() {
+            /**
+             * checks if a cell is editable
+             * @param row the row of the cell in question
+             * @param column the column of the cell in question
+             * @return true if the cell is editable
+             */
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column != 3;
@@ -68,11 +95,23 @@ public class AdminDashboard extends JFrame {
         modelTableAttention.addColumn("Maximaler Dispo");
 
         DefaultTableModel modelTableAccounts = new DefaultTableModel() {
+            /**
+             * checks if the cell is editable
+             * @param row the row of the cell in question
+             * @param column the column of the cell in question
+             * @return true if the cell is editable
+             */
             @Override
             public boolean isCellEditable(int row, int column) {
                 return column != 2 && column != 1;
             }
 
+            /**
+             * sets a value in the cell at the given row and column and updates the bank-account
+             * @param aValue the value
+             * @param row the row of the cell
+             * @param column the column of the cell
+             */
             @Override
             public void setValueAt(Object aValue, int row, int column) {
                 Object old = getValueAt(row, column);
@@ -142,6 +181,10 @@ public class AdminDashboard extends JFrame {
         tableUsers = new JTable(modelTableUsers);
         tableUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableUsers.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            /**
+             * updates table accounts when the selection mode is not empty, clears the table accounts if empty
+             * @param e the selection event
+             */
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 ListSelectionModel model = tableUsers.getSelectionModel();
@@ -176,6 +219,9 @@ public class AdminDashboard extends JFrame {
         tableAccounts.getColumnModel().getColumn(3).setCellRenderer(new AmountTableCellRenderer(3));
     }
 
+    /**
+     * clears the Table Accounts
+     */
     private void clearTableAccounts() {
         DefaultTableModel model = (DefaultTableModel) tableAccounts.getModel();
 
@@ -185,6 +231,10 @@ public class AdminDashboard extends JFrame {
         }
     }
 
+    /**
+     * refreshes Table Accounts
+     * @param minSelectionIndex the selected row
+     */
     private void refreshTableAccounts(int minSelectionIndex) {
         DefaultTableModel model = (DefaultTableModel) tableAccounts.getModel();
 

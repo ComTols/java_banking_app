@@ -17,6 +17,9 @@ public class InviteContacts extends JDialog {
     private JButton buttonOK;
     private JTable table1;
 
+    /**
+     *
+     */
     public InviteContacts() {
         setContentPane(contentPane);
         setModal(true);

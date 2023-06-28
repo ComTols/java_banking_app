@@ -12,14 +12,38 @@ import java.awt.event.*;
  * @version v1.0_stable_alpha
  */
 public class MoveMoneyDialog extends JDialog {
+    /**
+     * the panel containing the content to move the money
+     */
     private JPanel contentPane;
+    /**
+     * the OK-Button
+     */
     private JButton buttonOK;
+    /**
+     * the Cancel-Button
+     */
     private JButton buttonCancel;
+    /**
+     * the combobox used for the selected receiving account
+     */
     private JComboBox comboBoxFrom;
+    /**
+     * the combobox used for the selected sending account
+     */
     private JComboBox comboBoxTo;
+    /**
+     * the textfield used for the sent amount
+     */
     private JTextField textFieldTotal;
+    /**
+     * the textfield used for the purpose
+     */
     private JTextArea textAreaPurpose;
 
+    /**
+     * moves money values between your own bank-accounts
+     */
     public MoveMoneyDialog() {
         setContentPane(contentPane);
         setModal(true);
@@ -47,6 +71,7 @@ public class MoveMoneyDialog extends JDialog {
         // call onCancel() when cross is clicked
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+
             public void windowClosing(WindowEvent e) {
                 onCancel();
             }
@@ -64,6 +89,9 @@ public class MoveMoneyDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * moves the money between the selected accounts
+     */
     private void onOK() {
         BankAccount from = (BankAccount) comboBoxFrom.getSelectedItem();
         BankAccount to = (BankAccount) comboBoxTo.getSelectedItem();
@@ -88,6 +116,9 @@ public class MoveMoneyDialog extends JDialog {
         dispose();
     }
 
+    /**
+     * closes the window
+     */
     private void onCancel() {
         dispose();
     }

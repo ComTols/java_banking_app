@@ -15,9 +15,21 @@ import java.awt.event.*;
  * @version v1.0_stable_alpha
  */
 public class PayDialog extends JDialog {
+    /**
+     * the content pane containing the pay dialog
+     */
     private JPanel contentPane;
+    /**
+     * the OK-button
+     */
     private JButton buttonOK;
+    /**
+     * table containg all the bills of the user
+     */
     private JTable table1;
+    /**
+     * list with all selectable bank-accounts
+     */
     private JComboBox comboBox1;
 
     public PayDialog() {
@@ -49,11 +61,17 @@ public class PayDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * closes window
+     */
     private void onOK() {
         // add your code here
         dispose();
     }
 
+    /**
+     * creates the UI-components and is called before the object (paydialog) is instantiated
+     */
     private void createUIComponents() {
         // Erstellen der Tabelle
         DefaultTableModel model = new DefaultTableModel() {
@@ -86,6 +104,7 @@ public class PayDialog extends JDialog {
 
         table1.getColumnModel().getColumn(3).setCellRenderer(new ClientsTableButtonRenderer());
         table1.getColumnModel().getColumn(3).setCellEditor(new ClientsTableRenderer(new JCheckBox()) {
+
             @Override
             public void onClick(ClientsTableRenderer clientsTableRenderer) {
                 PayRequest payRequest = (PayRequest) table1.getValueAt(row, 0);
@@ -118,6 +137,9 @@ public class PayDialog extends JDialog {
         table1.getColumnModel().getColumn(2).setCellRenderer(renderer);
     }
 
+    /**
+     * refrehes the payments-table
+     */
     private void refreshPays() {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
         int rowCount = table1.getModel().getRowCount();

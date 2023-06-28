@@ -15,17 +15,53 @@ import java.sql.SQLIntegrityConstraintViolationException;
  * @version v1.0_stable_alpha
  */
 public class NewAccountDialog extends JDialog {
+    /**
+     * the panel containing the new account Dialog
+     */
     private JPanel contentPane;
+    /**
+     * the OK-button
+     */
     private JButton buttonOK;
+    /**
+     * the cancel-button
+     */
     private JButton buttonCancel;
+    /**
+     * the radiobutton for the girokonto
+     */
     private JRadioButton girokontoRadioButton;
+    /**
+     * the radiobutton for the fixedDeposit-Accounts
+     */
     private JRadioButton fixedDepositAccountRadioButton;
+    /**
+     * the radiobutton for the credit accounts
+     */
     private JRadioButton creditAccountRadioButton;
+    /**
+     * radiobutton used for saving accounts
+     */
     private JRadioButton savingsAccountRadioButton;
+    /**
+     * textfield used for the dispo amount
+     */
     private JTextField textFieldDispo;
+    /**
+     * the info-Button
+     */
     private JButton infoButton;
+    /**
+     * textfield used for the name
+     */
     private JTextField textFieldName;
+    /**
+     * radiobutton used for shared accounts
+     */
     private JRadioButton sharedAccountRadioButton;
+    /**
+     * the buttongroup used for the account types
+     */
     private ButtonGroup buttonGroupAccountType;
 
     public NewAccountDialog() {
@@ -85,6 +121,9 @@ public class NewAccountDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * trys to create a new account if the inputs are valid
+     */
     private void onOK() {
         // add your code here
         if (buttonGroupAccountType.getSelection() == null) {
@@ -159,6 +198,9 @@ public class NewAccountDialog extends JDialog {
         dispose();
     }
 
+    /**
+     * closes window
+     */
     private void onCancel() {
         // add your code here if necessary
         dispose();
