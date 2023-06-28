@@ -3,6 +3,11 @@ package UI;
 import javax.swing.*;
 import java.net.URL;
 
+/**
+ * Starts the Program and initialized the windows
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class Program {
     public static void main(String[] args) {
         new MainScreen();

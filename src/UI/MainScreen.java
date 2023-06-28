@@ -12,6 +12,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.DecimalFormat;
 
+/**
+ * Shows the main window with the transactions of an account.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class MainScreen extends JFrame {
     public JPanel panelMain;
     private JComboBox comboBoxAccount;

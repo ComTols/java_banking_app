@@ -3,6 +3,11 @@ package UI;
 import javax.swing.*;
 import java.awt.event.*;
 
+/**
+ * Displays a dialog to log in the user with forename, lastname and password.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class LoginDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;

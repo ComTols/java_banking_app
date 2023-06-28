@@ -5,10 +5,21 @@ import UI.UserControl;
 import java.sql.*;
 import java.util.ArrayList;
 
+/**
+ * The connection to the database. Provides various functions to query the database.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class Database {
 
+    /**
+     * The actual connection object to the database
+     */
     private Connection connection;
 
+    /**
+     * Establish connection to database
+     */
     public void connect() {
         try {
             Class.forName("org.mariadb.jdbc.Driver");
@@ -29,6 +40,9 @@ public class Database {
 
     }
 
+    /**
+     * close connection to database
+     */
     public void finish() {
         try {
             connection.close();
@@ -36,6 +50,13 @@ public class Database {
         }
     }
 
+    /**
+     * Checks for valid user credentials
+     * @param forename forename of requested user
+     * @param lastname lastname of requested user
+     * @param password password of requested user
+     * @return all data related to requested user as an object
+     */
     public Person checkPerson(String forename, String lastname, char[] password) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -71,6 +92,11 @@ public class Database {
         return null;
     }
 
+    /**
+     * Returns all users, who aren´t friends of the given user
+     * @param p given user
+     * @return all users, who aren´t friends of given user
+     */
     public Person[] getAvailableFriends(Person p) {
         ArrayList<Person> list = new ArrayList<>();
         try {
@@ -120,6 +146,11 @@ public class Database {
         return list.toArray(new Person[0]);
     }
 
+    /**
+     * Returns all users, who send a friend request to the given user
+     * @param p given user
+     * @return all users, who send friend request to given user
+     */
     public Person[] getPendingRequests(Person p) {
         ArrayList<Person> list = new ArrayList<>();
         try {
@@ -137,6 +168,16 @@ public class Database {
         return list.toArray(new Person[0]);
     }
 
+    /**
+     * The handleContactsResponse function is used to handle the response from a query that returns
+     * contacts of a user. It takes in three parameters: the person object, an array list of persons, and
+     * a result set. The function then iterates through each row in the result set and adds it to an array list
+     * which is returned at the end of this function.
+     *
+     * @param p Get the forename and lastname of the person that is logged in
+     * @param list Store the contacts of a person
+     * @param result Get the data from the database
+     */
     private void handleContactsResponse(Person p, ArrayList<Person> list, ResultSet result) throws SQLException {
         while (result.next()) {
             String forename;
@@ -169,6 +210,11 @@ public class Database {
         }
     }
 
+    /**
+     * Gives all users, who are friends of the given user
+     * @param p given user
+     * @return friends of given user
+     */
     public Person[] getContacts(Person p) {
         ArrayList<Person> list = new ArrayList<>();
         try {
@@ -188,6 +234,11 @@ public class Database {
         return list.toArray(new Person[0]);
     }
 
+    /**
+     * Get all bank accounts associated with the given person
+     * @param p given person
+     * @return associated bank accounts
+     */
     public BankAccount[] getBankAccounts(Person p) {
         ArrayList<BankAccount> list = new ArrayList<>();
 
@@ -211,6 +262,11 @@ public class Database {
         return list.toArray(new BankAccount[0]);
     }
 
+    /**
+     * Get all transactions involving the given bank account
+     * @param b given bank account
+     * @return all transactions
+     */
     public Transaction[] getTransactions(BankAccount b) {
         ArrayList<Transaction> list = new ArrayList<>();
 
@@ -264,6 +320,11 @@ public class Database {
         return list.toArray(new Transaction[0]);
     }
 
+    /**
+     * Creates a new bank account
+     * @param b new bank account
+     * @throws DuplicateKeyException Throws an exception, if the name is already taken.
+     */
     public void createNewBankAccount(BankAccount b) throws DuplicateKeyException {
         String[] values = new String[9];
         values[0] = b.name;
@@ -313,6 +374,11 @@ public class Database {
         UserControl.control.ui.refreshBankAccounts();
     }
 
+    /**
+     * Sets the main account of the given user to the given bank account
+     * @param p given user
+     * @param b given bank account
+     */
     public void updateNewMainAccount(Person p, BankAccount b) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -331,6 +397,11 @@ public class Database {
         UserControl.control.reloadUser();
     }
 
+    /**
+     * Deletes an existing friends relationship between two users
+     * @param me first user
+     * @param other second user
+     */
     public void deleteFriendship(Person me, Person other) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -357,6 +428,11 @@ public class Database {
         }
     }
 
+    /**
+     * Adds a new friends relationship between two users with pending attribute
+     * @param me first user
+     * @param other second user
+     */
     public void addPendingFriendship(Person me, Person other) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -376,6 +452,11 @@ public class Database {
         }
     }
 
+    /**
+     * Updates a friends relationship between two users from pending to active
+     * @param me first user
+     * @param other second user
+     */
     public void acceptPendingFriendship(Person me, Person other) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -403,6 +484,10 @@ public class Database {
         }
     }
 
+    /**
+     * Sets an account to inactive
+     * @param b account to be deleted
+     */
     public void deleteAccount(BankAccount b) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -425,6 +510,13 @@ public class Database {
         }
     }
 
+    /**
+     * Sends money from a given bank account to the main account from a given user
+     * @param f sender bank account
+     * @param t receiver user
+     * @param total amount as float with two decimals
+     * @param purpose description
+     */
     public void moneyTransaction(BankAccount f, Person t, float total, String purpose) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -444,6 +536,13 @@ public class Database {
         }
     }
 
+    /**
+     * Moves money from a given bank account to another given bank account
+     * @param f sender bank account
+     * @param t receiver bank account
+     * @param v amount as float with two decimals
+     * @param p description
+     */
     public void moveMoney(BankAccount f, BankAccount t, float v, String p) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -463,6 +562,11 @@ public class Database {
         }
     }
 
+    /**
+     * Get all pay requests associated with the given user
+     * @param p given user
+     * @return associated pay requests
+     */
     public PayRequest[] getPayRequests (Person p) {
         ArrayList<PayRequest> list = new ArrayList<>();
 
@@ -493,6 +597,11 @@ public class Database {
         return list.toArray(new PayRequest[]{});
     }
 
+    /**
+     * Settles a pay request
+     * @param p pay request to settle
+     * @param from bank account from which it is debited
+     */
     public void pay(PayRequest p, BankAccount from) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -512,6 +621,10 @@ public class Database {
         }
     }
 
+    /**
+     * Deletes a pay request from the open pay requests list
+     * @param p pay request to be deleted
+     */
     public void deletePayRequest(PayRequest p) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -529,6 +642,11 @@ public class Database {
         }
     }
 
+    /**
+     * Creates multiple pay requests and sets the new ids to the given objects
+     * @param p pay requests to be inserted
+     * @return inserted pay requests with the generated ids
+     */
     public PayRequest[] createPayRequests(PayRequest[] p) {
         for (PayRequest pay : p) {
             try {
@@ -557,6 +675,11 @@ public class Database {
         return p;
     }
 
+    /**
+     * Gets all users, who are related to a given admin user
+     * @param p given admin
+     * @return related users
+     */
     public Person[] getRelatedUsers(Person p) {
         ArrayList<Person> pers = new ArrayList<>();
         try {
@@ -587,6 +710,11 @@ public class Database {
         return pers.toArray(new Person[]{});
     }
 
+    /**
+     * Gets the value of a given bank account
+     * @param b given bank account
+     * @return total value
+     */
     public float getBankAccountValue(BankAccount b) {
         float minus = 0f;
         try {
@@ -625,6 +753,11 @@ public class Database {
         return plus - minus;
     }
 
+    /**
+     * Changes the forename of a given user
+     * @param old the old forename
+     * @param user user, who will be updated with new forename
+     */
     public void changeUserForename(String old, Person user) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -645,6 +778,11 @@ public class Database {
         }
     }
 
+    /**
+     * Changes the lastname of a given user
+     * @param old the old lastname
+     * @param user user, who will be updated with new lastname
+     */
     public void changeUserLastname(String old, Person user) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -665,6 +803,10 @@ public class Database {
         }
     }
 
+    /**
+     * Updates the necessary user data of a given user. To update the optional data use {@link #updateUser(Person)}
+     * @param user given user
+     */
     public void changeUser(Person user) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -686,6 +828,11 @@ public class Database {
         }
     }
 
+    /**
+     * Get all pending bank accounts related to a given admin user including the pending bank accounts from the user himself
+     * @param u given admin user
+     * @return related pending accounts
+     */
     public BankAccount[] getPendingAccounts(Person u) {
         ArrayList<BankAccount> list = new ArrayList<>();
         try {
@@ -720,6 +867,16 @@ public class Database {
         return list.toArray(new BankAccount[]{});
     }
 
+
+    /**
+     * Converts the data from the database result set into BankAccount objects
+     * and adds them to the provided list.
+     *
+     * @param list The list to which the BankAccount objects will be added.
+     * @param result The result set containing the data from the database.
+     * @param p The person associated with the bank accounts.
+     * @throws SQLException If there is an error accessing the result set.
+     */
     private void bankAccountFromResponse(ArrayList<BankAccount> list, ResultSet result, Person p) throws SQLException {
         switch (result.getString("type")) {
             case "normal" -> {
@@ -764,6 +921,10 @@ public class Database {
         }
     }
 
+    /**
+     * Gets all users who are not managed by an admin
+     * @return not managed users
+     */
     public Person[] getNotCaredCustomers() {
         ArrayList<Person> list = new ArrayList<>();
         try {
@@ -792,6 +953,11 @@ public class Database {
         return list.toArray(new Person[]{});
     }
 
+    /**
+     * Assigns a given user to a given admin
+     * @param m given admin user
+     * @param c given user
+     */
     public void careForCustomer(Person m, Person c) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -808,6 +974,11 @@ public class Database {
         }
     }
 
+    /**
+     * Creates a given user in the database and generates a password
+     * @param u given user
+     * @return generated password
+     */
     public String createUser(Person u) {
         String pw = PasswordGenerator.generatePassword();
         try {
@@ -849,6 +1020,10 @@ public class Database {
         return pw;
     }
 
+    /**
+     * Sets a given bank account from pending to active
+     * @param b given bank account
+     */
     public void acceptBankAccount(BankAccount b) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -865,6 +1040,10 @@ public class Database {
         }
     }
 
+    /**
+     * Removes a given pending bank account
+     * @param b given account
+     */
     public void rejectBankAccount(BankAccount b) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -881,6 +1060,10 @@ public class Database {
         }
     }
 
+    /**
+     * Updates a given user. Note that you cant update forename or lastname!
+     * @param u given user
+     */
     public void updateUser(Person u) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -906,6 +1089,10 @@ public class Database {
         }
     }
 
+    /**
+     * Update given standard bank account. Note that you cant update the name. If you want to update the name use {@link #updateAccount(BankAccount, String)}
+     * @param b given bank account
+     */
     public void updateAccount(BankAccount b) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -925,6 +1112,12 @@ public class Database {
         }
     }
 
+    /**
+     * Update given standard bank account
+     * @param b given bank account with new name
+     * @param oldName old name of bank account
+     * @throws DuplicateKeyException Thrown, if the new name is already taken
+     */
     public void updateAccount(BankAccount b, String oldName) throws DuplicateKeyException {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -952,8 +1145,8 @@ public class Database {
                         WHERE
                             main_account = ?;"""
             );
-            statement.setString(1, oldName);
-            statement.setString(2, b.name);
+            statement.setString(1, b.name);
+            statement.setString(2, oldName);
 
             statement.executeUpdate();
         } catch (SQLException e) {

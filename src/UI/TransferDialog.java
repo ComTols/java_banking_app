@@ -8,6 +8,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+/**
+ * Displays a dialog to make a transaction to a friend user.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class TransferDialog extends JDialog implements ISelectReceiver {
     private JPanel contentPane;
     private JButton buttonOK;
@@ -158,13 +163,6 @@ public class TransferDialog extends JDialog implements ISelectReceiver {
     private void onCancel() {
         // add your code here if necessary
         dispose();
-    }
-
-    public static void main(String[] args) {
-        TransferDialog dialog = new TransferDialog();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
     }
 
     private void selectContacts() {

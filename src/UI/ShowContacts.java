@@ -8,6 +8,11 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Displays a dialog to view your current contacts.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class ShowContacts extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;

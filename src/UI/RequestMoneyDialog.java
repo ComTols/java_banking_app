@@ -9,6 +9,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+/**
+ * Shows a dialog box to invoice a friend user.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
     private JPanel contentPane;
     private JButton buttonOK;

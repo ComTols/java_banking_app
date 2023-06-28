@@ -10,6 +10,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Displays a dialog to release an account from an associated user that is pending.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class ReleaseAccountDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;

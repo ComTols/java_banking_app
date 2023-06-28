@@ -9,6 +9,11 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Displays a dialog to pay an invoice.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class PayDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;

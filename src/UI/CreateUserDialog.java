@@ -12,6 +12,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Pattern;
 
+/**
+ * Shows a dialog box to create a new user.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class CreateUserDialog extends JDialog implements IParsedBirthdayReceiver {
     private JPanel contentPane;
     private JButton buttonOK;

@@ -2,6 +2,11 @@ package UI;
 
 import javax.swing.*;
 
+/**
+ * Defines the menu to navigate through the application.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class MainScreenMenu extends JMenuBar {
 
     public MainScreenMenu() {

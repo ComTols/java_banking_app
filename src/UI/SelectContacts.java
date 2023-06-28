@@ -10,6 +10,11 @@ import java.awt.event.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+/**
+ * Displays a dialog box to select contacts. Requires an ISelectReceiver to receive the selected contacts.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class SelectContacts extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;

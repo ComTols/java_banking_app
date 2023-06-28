@@ -7,8 +7,12 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
-public class
-InviteContacts extends JDialog {
+/**
+ * Shows a dialog box to invite contacts.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
+public class InviteContacts extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JTable table1;

@@ -9,6 +9,11 @@ import java.awt.event.*;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
+/**
+ * Shows a dialog to create a new bankaccount.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class NewAccountDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;

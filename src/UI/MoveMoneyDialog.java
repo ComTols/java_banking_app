@@ -6,6 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Shows a dialog to move money to one of your own accounts.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class MoveMoneyDialog extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;

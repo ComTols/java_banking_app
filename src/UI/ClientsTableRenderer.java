@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Makes a button cell in a table clickable and triggers the {@link #onClick(ClientsTableRenderer)} function
+ */
 public abstract class ClientsTableRenderer extends DefaultCellEditor {
     JButton button;
     private String label;
@@ -58,5 +61,9 @@ public abstract class ClientsTableRenderer extends DefaultCellEditor {
         }
     }
 
+    /**
+     * Triggered when the button was pressed
+     * @param clientsTableRenderer the clicked button
+     */
     public abstract void onClick(ClientsTableRenderer clientsTableRenderer);
 }

@@ -6,6 +6,11 @@ import Data.*;
 import javax.swing.*;
 import java.util.Date;
 
+/**
+ * Contains the logic of the program. Call the static instance {@link #control} to operate on the default database or create more instances to work in parallel.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class UserControl {
 
     public static UserControl control = new UserControl();

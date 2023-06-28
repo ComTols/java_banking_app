@@ -10,6 +10,11 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
 
+/**
+ * Shows the administrator dashboard with an overview of the overdrawn accounts, the associated customers and the accounts of the customers.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class AdminDashboard extends JFrame {
     private JPanel panelMain;
     private JTable tableUsers;

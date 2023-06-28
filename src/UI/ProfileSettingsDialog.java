@@ -9,6 +9,11 @@ import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Displays a dialog box to make profile settings.
+ * @author MaximilianSchüller
+ * @version v1.0_stable_alpha
+ */
 public class ProfileSettingsDialog extends JDialog implements IParsedBirthdayReceiver {
     private JPanel contentPane;
     private JButton buttonOK;
