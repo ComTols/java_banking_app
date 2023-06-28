@@ -104,6 +104,8 @@ Eine durchgehende und nutzerfreundliche Fehlerbehandlung wird vorausgesetzt, bes
 
 Der Programmcode folgt keinen explizieten Vorgaben, jedoch wird auf eine konsistente Formatierung und sinnvolle Bezeichnungen geachtet.
 
+\newpage
+
 \section{Projektplanung}
 Die vorausgehende Projektplanung ist spartanisch ausgefallen, um schnellstmöglich das Produkt fertig zu stellen. Daher beschränkt sich diese auf einen groben Aufbau des \ac{gui} und die nötigen Funktionsweisen. Wir einigten uns darauf, uns auf ein Hauptfenster zu beschränken, dass entweder die Transaktionsübersicht oder das Administrator-Dashboard anzeigt. Darüber hinaus sollen alle Funktionen ein eigenes Popup Fenster erhalten.
 
@@ -132,10 +134,16 @@ Das Programm verwendet eine externe zentrale Datenbank, sodass jeder Client von 
 Zu empfehlen ist es, ein \ac{api} zwischen Client und Datenbank zu stellen, der die Authentifizierung der Nutzer übernimmt. So wird verhindert, dass ein Nutzer direkt auf die Datenbank zugreifen kann, er erhält also nur seine Anmeldedaten für sein Konto, aber niemals die Anmeldedaten für weiter Infrastrucktur.
 
 Wir haben uns gegen dieses bewährte Modell entschieden, da der Arbeitsaufwand sich effektiv verdoppelt hätte, hätten wir ein \ac{api} zu unserer Anwendung geschrieben. Da unsere Applikation nicht produktiv eingesetzt wird, sondern nur ausgewählten Personen zur Verfügung steht, ist das Risiko akzeptabel. Uns ist jedoch bewusst, dass in einer produktiven Umgebung ein solches Modell extrem unsicher ist.
+\newpage
 \subsection{Datenbank}
 Als Datenbank verwenden wir eine MariaDB \code{Ver 15.1 Distrib 10.6.12-MariaDB} auf einem \code{Ubuntu 22.04.2 LTS} V-Server.
 
-Zum Verbinden mit der Datenbank verwenden wir die externe Bibliothek \code{org.mariadb.jdbc.Driver} der Version \code{3.1.4}, die hier heruntergeladen werden kann: \url{https://mariadb.com/downloads/connectors/connectors-data-access/java8-connector}
+Zum Verbinden mit der Datenbank verwenden wir die externe Bibliothek \\
+ \code{org.mariadb.jdbc.Driver} der Version \code{3.1.4}, die hier heruntergeladen werden kann: \url{https://mariadb.com/downloads/connectors/connectors-data-access/java8-connector}
+ \begin{figure}[!h]
+	\makebox[\textwidth][c]{\includegraphics[width=\textwidth]{database_rel_diagram.png}}
+\end{figure}
+
 
 \newpage
 \phantomsection
