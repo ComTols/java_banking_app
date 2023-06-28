@@ -4,7 +4,7 @@ import java.util.Date;
 
 /**
  * A transaction is a movement of money.
- * @author MaximilianSchüller
+ * @author Justus Siegert
  * @version v1.0_stable_alpha
  */
 public class Transaction {

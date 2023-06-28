@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 
 /**
  * Makes a button cell in a table clickable and triggers the {@link #onClick(ClientsTableRenderer)} function
+ * @author fynn thierling
+ * @version v1.0_stable_alpha
  */
 public abstract class ClientsTableRenderer extends DefaultCellEditor {
     /**

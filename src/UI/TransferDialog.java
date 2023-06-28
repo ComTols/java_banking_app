@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  * Displays a dialog to make a transaction to a friend user.
- * @author MaximilianSchüller
+ * @author Joscha Dierks
  * @version v1.0_stable_alpha
  */
 public class TransferDialog extends JDialog implements ISelectReceiver {

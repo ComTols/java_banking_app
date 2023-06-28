@@ -10,7 +10,7 @@ import java.awt.event.*;
 
 /**
  * Displays a dialog to view all pending friend requests.
- * @author MaximilianSchüller
+ * @author Egzon Zenuni
  * @version v1.0_stable_alpha
  */
 public class ShowRequests extends JDialog {

@@ -3,7 +3,7 @@ package Data;
 /**
  * Money can only be transferred from a savings account to one specific account. No transfer to other accounts is possible.
  *
- * @author MaximilianSchüller
+ * @author Justus Siegert
  * @version v1.0_stable_alpha
  */
 public class SavingAccount extends BankAccount {

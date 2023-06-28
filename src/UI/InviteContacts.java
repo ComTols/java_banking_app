@@ -9,7 +9,7 @@ import java.awt.event.*;
 
 /**
  * Shows a dialog box to invite contacts.
- * @author MaximilianSchüller
+ * @author fynnn thierling
  * @version v1.0_stable_alpha
  */
 public class InviteContacts extends JDialog {

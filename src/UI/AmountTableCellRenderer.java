@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
 
 /**
  * Represents a formatted amount in the table.
- * @author MaximilianSchüller
+ * @author Justus Siegert
  * @version v1.0_stable_alpha
  */
 public class AmountTableCellRenderer extends DefaultTableCellRenderer {

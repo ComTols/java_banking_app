@@ -11,7 +11,7 @@ import java.util.Date;
 
 /**
  * Displays a dialog box to make profile settings.
- * @author MaximilianSchüller
+ * @author justus siegert
  * @version v1.0_stable_alpha
  */
 public class ProfileSettingsDialog extends JDialog implements IParsedBirthdayReceiver {

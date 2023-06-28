@@ -6,7 +6,7 @@ import java.awt.*;
 
 /**
  * Renders a table cell as a button
- * @author MaximilianSchüller
+ * @author Justsus Siegert
  * @version v1.0_stable_alpha
  */
 public class ClientsTableButtonRenderer extends JButton implements TableCellRenderer {

@@ -8,7 +8,7 @@ import java.awt.event.*;
 
 /**
  * Shows a dialog to move money to one of your own accounts.
- * @author MaximilianSchüller
+ * @author fynn thierling
  * @version v1.0_stable_alpha
  */
 public class MoveMoneyDialog extends JDialog {

@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 
 /**
  * Displays a dialog with a list of users who have not yet been assigned an admin.
- * @author MaximilianSchüller
+ * @author justus siegert
  * @version v1.0_stable_alpha
  */
 public class NotCaredCustomersDialog extends JDialog {

@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * Fixed deposit accounts only provide access to the capital once the minimum term has been exceeded.
  *
- * @author MaximilianSchüller
+ * @author Egzon Zenuni
  * @version v1.0_stable_alpha
  */
 public class FixedDepositAccount extends BankAccount {

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 /**
  * Shows a dialog box to create a new user.
- * @author MaximilianSchüller
+ * @author fynn thierling
  * @version v1.0_stable_alpha
  */
 public class CreateUserDialog extends JDialog implements IParsedBirthdayReceiver {

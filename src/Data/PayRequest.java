@@ -3,7 +3,7 @@ package Data;
 /**
  * Bill that should be paid
  *
- * @author MaximilianSchüller
+ * @author Joscha Dierks
  * @version v1.0_stable_alpha
  */
 public class PayRequest {

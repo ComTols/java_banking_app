@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * User with all properties identified by unique key pair of forename and lastname
  *
- * @author MaximilianSchüller
+ * @author Joscha Dierks
  * @version v1.0_stable_alpha
  */
 public class Person {

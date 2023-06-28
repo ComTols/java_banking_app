@@ -5,7 +5,7 @@ import java.net.URL;
 
 /**
  * Starts the Program and initialized the windows
- * @author MaximilianSchüller
+ * @author justus siegert
  * @version v1.0_stable_alpha
  */
 public class Program {

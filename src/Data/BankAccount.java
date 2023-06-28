@@ -3,7 +3,7 @@ package Data;
 /**
  * standard checking account
  *
- * @author MaximilianSchüller
+ * @author Egzon Zenuni
  * @version v1.0_stable_alpha
  */
 public class BankAccount {
