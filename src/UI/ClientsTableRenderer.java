@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  */
 public abstract class ClientsTableRenderer extends DefaultCellEditor {
     /**
-     * The button to be showen in the table
+     * The button to be shown in the table
      */
     JButton button;
     /**
