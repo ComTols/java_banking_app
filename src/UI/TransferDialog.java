@@ -14,16 +14,46 @@ import java.util.ArrayList;
  * @version v1.0_stable_alpha
  */
 public class TransferDialog extends JDialog implements ISelectReceiver {
+    /**
+     * Panel containing the content
+     */
     private JPanel contentPane;
+    /**
+     * ok button
+     */
     private JButton buttonOK;
+    /**
+     * cancel button
+     */
     private JButton buttonCancel;
+    /**
+     * text field containing amount
+     */
     private JTextField textFieldTotal;
+    /**
+     * text area containing description
+     */
     private JTextArea textAreaPurpose;
+    /**
+     * List with all available accounts to select sender bank account
+     */
     private JComboBox comboBoxAccount;
+    /**
+     * list containing all receiving persons
+     */
     private JList listReceiver;
+    /**
+     * add button
+     */
     private JButton btnAdd;
+    /**
+     * delete button
+     */
     private JButton btnDelete;
 
+    /**
+     * Show the dialog
+     */
     public TransferDialog() {
         setContentPane(contentPane);
         setModal(true);
@@ -92,6 +122,9 @@ public class TransferDialog extends JDialog implements ISelectReceiver {
         setVisible(true);
     }
 
+    /**
+     * Validate the input and transfer the money
+     */
     private void onOK() {
 
         if(textAreaPurpose.getText().isEmpty()) {
@@ -160,11 +193,17 @@ public class TransferDialog extends JDialog implements ISelectReceiver {
         dispose();
     }
 
+    /**
+     * Close the dialog
+     */
     private void onCancel() {
         // add your code here if necessary
         dispose();
     }
 
+    /**
+     * Shows a dialog to select contacts
+     */
     private void selectContacts() {
         new SelectContacts(this, false);
     }

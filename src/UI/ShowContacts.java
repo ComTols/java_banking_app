@@ -14,10 +14,22 @@ import java.awt.event.*;
  * @version v1.0_stable_alpha
  */
 public class ShowContacts extends JDialog {
+    /**
+     * Panel containing the content
+     */
     private JPanel contentPane;
+    /**
+     * ok button
+     */
     private JButton buttonOK;
+    /**
+     * Table containing the current users contacts
+     */
     private JTable table1;
 
+    /**
+     * Shows the dialog
+     */
     public ShowContacts() {
         setContentPane(contentPane);
         setModal(true);
@@ -57,18 +69,17 @@ public class ShowContacts extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Close the dialog
+     */
     private void onOK() {
         // add your code here
         dispose();
     }
 
-    public static void main(String[] args) {
-        ShowContacts dialog = new ShowContacts();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
-
+    /**
+     * Creates the ui components and is called before the object (ShowContacts) is instantiated
+     */
     private void createUIComponents() {
         // Erstellen der Tabelle
         DefaultTableModel model = new DefaultTableModel() {

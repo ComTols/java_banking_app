@@ -13,12 +13,21 @@ import java.awt.event.*;
  * @version v1.0_stable_alpha
  */
 public class InviteContacts extends JDialog {
+    /**
+     * Panel containing the content
+     */
     private JPanel contentPane;
+    /**
+     * Ok button
+     */
     private JButton buttonOK;
+    /**
+     * Table with all users using the program
+     */
     private JTable table1;
 
     /**
-     *
+     * Shows the dialog
      */
     public InviteContacts() {
         setContentPane(contentPane);
@@ -48,18 +57,17 @@ public class InviteContacts extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Triggered, when the ok button was pressed
+     */
     private void onOK() {
         // add your code here
         dispose();
     }
 
-    public static void main(String[] args) {
-        InviteContacts dialog = new InviteContacts();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
-
+    /**
+     * Creates the ui components and is called before the object (InviteContacts) is instantiated
+     */
     private void createUIComponents() {
         // Erstellen der Tabelle
         DefaultTableModel model = new DefaultTableModel() {

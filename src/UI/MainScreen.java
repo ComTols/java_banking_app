@@ -18,15 +18,42 @@ import java.text.DecimalFormat;
  * @version v1.0_stable_alpha
  */
 public class MainScreen extends JFrame {
+    /**
+     * The panel containing the main content
+     */
     public JPanel panelMain;
+    /**
+     * The bank account selection
+     */
     private JComboBox comboBoxAccount;
+    /**
+     * The table with all transactions
+     */
     private JTable table1;
+    /**
+     * Button to show the accounts details
+     */
     private JButton btnAccountInfo;
+    /**
+     * Label to show the amount of the selected bank account
+     */
     private JLabel labelTotal;
+    /**
+     * Button to delete the bank account
+     */
     private JButton btnDelete;
+    /**
+     * Button to balance the bank account. Only available, if the selected bank account is a credit card
+     */
     private JButton btnBalance;
+    /**
+     * The amount of the bank account
+     */
     private float total = 0f;
 
+    /**
+     * Shows the main screen
+     */
     public MainScreen() {
         setContentPane(panelMain);
         UserControl.control.ui = this;
@@ -48,6 +75,9 @@ public class MainScreen extends JFrame {
         btnBalance.addActionListener(e -> balance());
     }
 
+    /**
+     * Deletes the selected bank account
+     */
     private void deleteAccount() {
         if(total < 0) {
             JOptionPane.showMessageDialog(this, "Sie müssen zuerst das Konto ausgleichen!", "Kontostand negativ", JOptionPane.ERROR_MESSAGE);
@@ -75,12 +105,18 @@ public class MainScreen extends JFrame {
         refreshBankAccounts();
     }
 
+    /**
+     * Shows some information of the selected bank account
+     */
     private void showBankAccountInfos() {
         BankAccount b = UserControl.control.getActiveAccount();
         JOptionPane.showMessageDialog(this,
                 "<html>Dieses Konto:<br>Name: " + b + "<br>Typ: "+ b.getClass() +"<br>Maximaler Dispokredit: "+b.getOverdraftFacility()+"€</html>", "Kontoinformationen", JOptionPane.INFORMATION_MESSAGE);
     }
 
+    /**
+     * Reloads the list of selectable bank accounts
+     */
     public void refreshBankAccounts() {
         try {
             boolean first = true;
@@ -97,6 +133,9 @@ public class MainScreen extends JFrame {
         refreshTransactions();
     }
 
+    /**
+     * Reloads the table to show all transactions
+     */
     public void refreshTransactions() {
 
         float totalAccount = 0.0f;
@@ -131,6 +170,9 @@ public class MainScreen extends JFrame {
         total = totalAccount;
     }
 
+    /**
+     * Set up on program start
+     */
     private void createAndShowGui() {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setJMenuBar(new MainScreenMenu());
@@ -143,6 +185,9 @@ public class MainScreen extends JFrame {
         new LoginDialog();
     }
 
+    /**
+     * Creates the ui components and is called before the object (InviteContacts) is instantiated
+     */
     private void createUIComponents() {
         // Erstellen der Tabelle
         DefaultTableModel model = new DefaultTableModel() {
@@ -181,6 +226,9 @@ public class MainScreen extends JFrame {
         table1.getColumnModel().getColumn(3).setCellRenderer(renderer);
     }
 
+    /**
+     * Balance the selected credit card account
+     */
     private void balance() {
         if(!(UserControl.control.getActiveAccount() instanceof CreditAccount)) {
             JOptionPane.showMessageDialog(this, "Nur Kreditkarten können direkt ausgeglichen werden.", "Keine Kreditkarte", JOptionPane.ERROR_MESSAGE);

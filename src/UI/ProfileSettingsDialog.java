@@ -15,22 +15,63 @@ import java.util.Date;
  * @version v1.0_stable_alpha
  */
 public class ProfileSettingsDialog extends JDialog implements IParsedBirthdayReceiver {
+    /**
+     * Panel containing the content
+     */
     private JPanel contentPane;
+    /**
+     * ok button
+     */
     private JButton buttonOK;
+    /**
+     * cancel button
+     */
     private JButton buttonCancel;
+    /**
+     * text field containing the forename
+     */
     private JTextField txtForename;
+    /**
+     * text field containing the lastname
+     */
     private JTextField txtLastname;
+    /**
+     * Dropdown menu to select the main account
+     */
     private JComboBox comboBox1;
+    /**
+     * formatted containing field with the birthday
+     */
     private JFormattedTextField fTxtDate;
+    /**
+     * text field containing the mail
+     */
     private JTextField txtMail;
+    /**
+     * text field containing the street
+     */
     private JTextField txtStreet;
+    /**
+     * text field containing the house number
+     */
     private JTextField txtNo;
+    /**
+     * text field containing the postal code
+     */
     private JTextField txtPLZ;
+    /**
+     * text field containing the phone number
+     */
     private JTextField txtPhone;
-
+    /**
+     * the parsed data from the formatted text field
+     */
     private Date parsedDate = null;
 
 
+    /**
+     * Shows the dialog
+     */
     public ProfileSettingsDialog() {
         setContentPane(contentPane);
         setModal(true);
@@ -80,6 +121,9 @@ public class ProfileSettingsDialog extends JDialog implements IParsedBirthdayRec
         setVisible(true);
     }
 
+    /**
+     * Validates the input and updates all information
+     */
     private void onOK() {
         if(fTxtDate.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Bitte geben Sie ein Geburtsdatum ein.", "Geburtsdatum fehlt", JOptionPane.ERROR_MESSAGE);
@@ -128,6 +172,9 @@ public class ProfileSettingsDialog extends JDialog implements IParsedBirthdayRec
         dispose();
     }
 
+    /**
+     * Close the dialog
+     */
     private void onCancel() {
         // add your code here if necessary
         dispose();
@@ -143,6 +190,10 @@ public class ProfileSettingsDialog extends JDialog implements IParsedBirthdayRec
         return parsedDate;
     }
 
+    /**
+     * Displays the given users data to the text fields
+     * @param p given user
+     */
     private void setTxt(Person p) {
         txtForename.setText(p.forename);
         txtLastname.setText(p.lastname);

@@ -14,10 +14,22 @@ import java.awt.event.*;
  * @version v1.0_stable_alpha
  */
 public class ShowRequests extends JDialog {
+    /**
+     * Panel containing the content
+     */
     private JPanel contentPane;
+    /**
+     * ok button
+     */
     private JButton buttonOK;
+    /**
+     * Table containing all pending friend requests
+     */
     private JTable table1;
 
+    /**
+     * Shows the dialog
+     */
     public ShowRequests() {
         setContentPane(contentPane);
         setModal(true);
@@ -60,18 +72,17 @@ public class ShowRequests extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Close the dialog
+     */
     private void onOK() {
         // add your code here
         dispose();
     }
 
-    public static void main(String[] args) {
-        ShowRequests dialog = new ShowRequests();
-        dialog.pack();
-        dialog.setVisible(true);
-        System.exit(0);
-    }
-
+    /**
+     * Creates the ui components and is called before the object (ShowRequests) is instantiated
+     */
     private void createUIComponents() {
         // Erstellen der Tabelle
         DefaultTableModel model = new DefaultTableModel() {

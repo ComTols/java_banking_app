@@ -16,11 +16,26 @@ import java.awt.event.ActionListener;
  * @version v1.0_stable_alpha
  */
 public class ReleaseAccountDialog extends JDialog {
+    /**
+     * Panel containing the content
+     */
     private JPanel contentPane;
+    /**
+     * ok button
+     */
     private JButton buttonOK;
+    /**
+     * Table containing pending bank accounts
+     */
     private JTable table1;
+    /**
+     * Pending accounts order like table
+     */
     private BankAccount[] pendingAccounts;
 
+    /**
+     * Shows the dialog
+     */
     public ReleaseAccountDialog() {
         setContentPane(contentPane);
         setModal(true);
@@ -39,11 +54,17 @@ public class ReleaseAccountDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Close the dialog
+     */
     private void onOK() {
         // add your code here
         dispose();
     }
 
+    /**
+     * Creates the ui components and is called before the object (ReleaseAccountDialog) is instantiated
+     */
     private void createUIComponents() {
         // Erstellen der Tabelle
         DefaultTableModel model = new DefaultTableModel() {
@@ -94,6 +115,10 @@ public class ReleaseAccountDialog extends JDialog {
         });
     }
 
+    /**
+     * Reloads the pending bank accounts table
+     * @param model table model
+     */
     private void refreshTable(DefaultTableModel model) {
 
         int rowCount = model.getRowCount();

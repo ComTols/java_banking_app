@@ -14,17 +14,47 @@ import java.util.ArrayList;
  * @author MaximilianSchüller
  * @version v1.0_stable_alpha
  */
-public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
+public class RequestMoneyDialog extends JDialog implements ISelectReceiver {
+    /**
+     * Panel containing the content
+     */
     private JPanel contentPane;
+    /**
+     * ok button
+     */
     private JButton buttonOK;
+    /**
+     * cancel button
+     */
     private JButton buttonCancel;
+    /**
+     * list with all receiving users
+     */
     private JList listFrom;
+    /**
+     * List with all bank accounts
+     */
     private JComboBox comboBoxAccount;
+    /**
+     * text field containing amount
+     */
     private JTextField textFieldTotal;
+    /**
+     * text field containing description
+     */
     private JTextArea textAreaPurpose;
+    /**
+     * add button
+     */
     private JButton btnAdd;
+    /**
+     * delete button
+     */
     private JButton btnDelete;
 
+    /**
+     * Show the dialog
+     */
     public RequestMoneyDialog() {
         setContentPane(contentPane);
         setModal(true);
@@ -93,6 +123,9 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
         setVisible(true);
     }
 
+    /**
+     * Validates the input and creates a pay request
+     */
     private void onOK() {
         textFieldTotal.setText(textFieldTotal.getText().replace(",", "."));
         float total = -1f;
@@ -129,6 +162,9 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
         }
     }
 
+    /**
+     * Close the dialog
+     */
     private void onCancel() {
         // add your code here if necessary
         dispose();
@@ -143,6 +179,9 @@ public class RequestMoneyDialog extends JDialog implements ISelectReceiver{
         }
     }
 
+    /**
+     * Shows a dialog to select users from contact list
+     */
     private void selectContacts() {
         new SelectContacts(this, false);
     }

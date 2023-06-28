@@ -16,13 +16,36 @@ import java.util.ArrayList;
  * @version v1.0_stable_alpha
  */
 public class SelectContacts extends JDialog {
+    /**
+     * Panel containing the content
+     */
     private JPanel contentPane;
+    /**
+     * ok button
+     */
     private JButton buttonOK;
+    /**
+     * cancel button
+     */
     private JButton buttonCancel;
+    /**
+     * Table containing all contacts
+     */
     private JTable table1;
+    /**
+     * Reference to receiving instance
+     */
     private ISelectReceiver receiver;
+    /**
+     * True, if the current user should be included
+     */
     private boolean selfIncluded;
 
+    /**
+     * Shows the dialog
+     * @param receiver receiving reference
+     * @param selfIncluded true, if the current user should be selectable
+     */
     public SelectContacts(ISelectReceiver receiver, boolean selfIncluded) {
         this.selfIncluded = selfIncluded;
         this.receiver = receiver;
@@ -72,6 +95,9 @@ public class SelectContacts extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Passes the selected users to the receiver
+     */
     private void onOK() {
         ArrayList<Person> persons = new ArrayList<>();
         for (int i = 0; i < table1.getModel().getRowCount(); i++) {
@@ -85,11 +111,17 @@ public class SelectContacts extends JDialog {
         dispose();
     }
 
+    /**
+     * Close the dialog
+     */
     private void onCancel() {
         // add your code here if necessary
         dispose();
     }
 
+    /**
+     * Creates the ui components and is called before the object (SelectContacts) is instantiated
+     */
     private void createUIComponents() {
         // Erstellen der Tabelle
         DefaultTableModel model = new DefaultTableModel() {

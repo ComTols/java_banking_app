@@ -15,11 +15,26 @@ import java.awt.event.ActionListener;
  * @version v1.0_stable_alpha
  */
 public class NotCaredCustomersDialog extends JDialog {
+    /**
+     * Panel containing the content
+     */
     private JPanel contentPane;
+    /**
+     * ok button
+     */
     private JButton buttonOK;
+    /**
+     * Table containing all not cared users
+     */
     private JTable table1;
+    /**
+     * all not cared users ordered like the table
+     */
     private Person[] users;
 
+    /**
+     * Shows the dialog
+     */
     public NotCaredCustomersDialog() {
         setContentPane(contentPane);
         setModal(true);
@@ -38,11 +53,17 @@ public class NotCaredCustomersDialog extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Clos the dialog
+     */
     private void onOK() {
         // add your code here
         dispose();
     }
 
+    /**
+     * Creates the ui components and is called before the object (NotCaredCustomersDialog) is instantiated
+     */
     private void createUIComponents() {
         // Erstellen der Tabelle
         DefaultTableModel model = new DefaultTableModel() {
@@ -84,6 +105,9 @@ public class NotCaredCustomersDialog extends JDialog {
         });
     }
 
+    /**
+     * Reloads the table content
+     */
     private void update() {
         DefaultTableModel model = (DefaultTableModel) table1.getModel();
 
